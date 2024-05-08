@@ -15,7 +15,6 @@ export default function Register() {
     const [error, setError] = useState("");
     const [registerError, setRegisterError] = useState("");
 
-    
     //state emit update
     const handleChange = (e) => {
         const { name, value } = e.target;

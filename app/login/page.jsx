@@ -24,24 +24,17 @@ export default function Login() {
     }));
   };
 
-  // const handleRegister = async (e) => {
-  //   e.preventDefault();
-  //   if ((credentials.userEmail == "" || credentials.userPhone == "") && credentials.userPass == "") {
-  //     setMessageInput("Please enter complete information!");
-  //   } else {
-  //     const resUser = await signIn('credentials', { userPass: credentials.userPass, userPhone: credentials.userPhone, userEmail: credentials.userEmail, redirect: false });
-  //     if (resUser.ok) {
-  //       setMessagelogin("สำเร็จ");
-  //     } else {
-  //       setMessageInput('Please check your information is correct!');
-  //     }
-  //   }
-  // };
   return (
     <main>
       <div className="flex w-[50rem] m-auto">
         <div className="w-2/4 m-auto">
-          <div className="text-3xl"><p>Joyfulwait</p></div>
+          <div className="text-3xl">
+            <p className="text-4xl">Joyfulwait </p>
+            <p className="mt-2">
+              <span className="ml-2 "><span className="text-hiligh">No more queue line</span></span>
+            </p>
+          </div>
+
         </div>
         <div className="w-1/5"></div>
         <div className="w-2/5">
@@ -71,9 +64,9 @@ export default function Login() {
                 </div>
                 <div className="my-3">
                   {actionLogin == "phone" ? (
-                    <p>เข้าสู่ระบบด้วย E-mail <span className="text-blue-500 cursor-pointer" onClick={() => handleClick("email")}>คลิก!!</span></p>
+                    <p>Login with E-mail <span className="text-blue-500 cursor-pointer" onClick={() => handleClick("email")}>Click!!</span></p>
                   ) : (
-                    <p>เข้าสู่ระบบด้วย เบอร์โทร <span className="text-blue-500 cursor-pointer" onClick={() => handleClick("phone")}>คลิก!!</span></p>
+                    <p>Login with Phone number <span className="text-blue-500 cursor-pointer" onClick={() => handleClick("phone")}>Click!!</span></p>
                   )}
                 </div>
                 <div className="my-3">
