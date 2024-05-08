@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --color-primary: #6C9BCF;
+  --color-danger: #FF0060;
+  --color-success: #1B9C85;
+  --color-warning: #F7D060;
+  --color-white: #fff;
+  --color-info-dark: #7d8da1;
+  --color-dark: #363949;
+  --color-light: rgba(132, 139, 200, 0.18);
+  --color-dark-variant: #677483;
+  --color-background: #f6f6f9;
+  --card-border-radius: 2rem;
+  --border-radius-1: 0.4rem;
+  --border-radius-2: 1.2rem;
+  --card-padding: 1.8rem;
+  --padding-1: 1.2rem;
+  --box-shadow: 0 2rem 3rem var(--color-light);
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+body{
+  /* background-color: var(--color-background) !important; */
+  font-family: "Noto Sans Thai", sans-serif !important;
+  font-optical-sizing: auto;
+}
+
+.card-default {
+  background-color: var(--color-white);
+  padding: var(--card-padding);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--box-shadow);
+  transition: all 0.3s ease;
+}
+.h-100vh{
+  height: 100vh;
+}
+.h-70vh{
+  height: 70vh;
+}
+.h-30vh{
+  height: 30vh;
+}
+.text-middle {
+  vertical-align: middle;
+}
+.text-hiligh-title {
+  background: linear-gradient(269deg, #7612fa 53.68%, #12d0fa 106.48%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  font-weight: 900;
+  -webkit-text-fill-color: transparent;
+}
+.text-hiligh {
+  background: linear-gradient(269deg, #fa12e3 1.83%, #7612fa 53.68%, #12d0fa 106.48%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+/* body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+} */
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.next-ui-input {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+}
+
+.next-ui-input input[type="file"] {
+  position: absolute;
+  font-size: 100px;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.next-ui-input-label {
+  margin-left: 5px;
+}
+
+.next-ui-input:hover {
+  background-color: #e0e0e0;
+}
+
+.image-container {
+  position: relative;
+  display: inline-block;
+}
+
+.button-overlay {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.button-overlay button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.overlay-container {
+  position: relative;
+}
+
+.overlay-container .image-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  color: #ffd700;
+}
+
+.text-webkit-center{
+  text-align: -webkit-center;
+}
