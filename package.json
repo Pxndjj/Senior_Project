@@ -1,7 +1,6 @@
 {
   "name": "joyfulwait",
   "version": "0.1.0",
-
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,6 +13,7 @@
     "@nextui-org/react": "^2.3.5",
     "@react-aria/i18n": "^3.10.2",
     "@react-google-maps/api": "^2.19.3",
+    "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "framer-motion": "^11.1.7",
     "moment": "^2.30.1",
