@@ -15,6 +15,24 @@ export default function Register() {
     const [error, setError] = useState("");
     const [registerError, setRegisterError] = useState("");
 
+    const api = {
+        checkUserRegister:async(objCredentials)=>{
+            const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND}/users/checkuserregister?userEmail=${objCredentials.userEmail}&userPhone=${objCredentials.userPhone}`;
+            const response = await fetch(apiUrl);
+            const result = await response.json();
+            return result
+        },
+        register:async(objCredentials)=>{
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/users/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(objCredentials)
+            });
+            return res;            
+        }
+    }
+
+    
     //state emit update
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,7 +40,35 @@ export default function Register() {
             ...prev,
             [name]: value
         }));
-    }; 
+    };
+    //state event
+    const handleRegister = async (e) => {
+        e.preventDefault();
+        if (credentials.userEmail == "" && credentials.userName == "" && credentials.userPass == "" && credentials.userPhone == "") {
+            setError("Please fill out the information completely!!!");
+            return;
+        }
+         try {
+             const checkUser = await api.checkUserRegister(credentials);
+            if (checkUser && checkUser.userPhone == credentials.userPhone) {
+                setRegisterError("This phone has already been used.");
+                return;
+            }
+            if (checkUser && checkUser.userEmail == credentials.userEmail) {
+                setRegisterError("This email has already been used.");
+                return;
+            }
+            const res = await api.register(credentials);
+            if (res.ok) {
+                await signIn('credentials', credentials);
+            } else {
+                alert("resgiter unsuccessful");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    };
 
 
     if (session) {
@@ -42,13 +88,13 @@ export default function Register() {
                     <div>
                         <p className="text-4xl">Joyfulwait </p>
                         <p className="mt-2">
-                        <span className="ml-2 "><span  className="text-hiligh">No queue</span></span>
+                        <span className="ml-2 "><span className="text-hiligh">No more queue line</span></span>
                         </p>                       
                     </div>
                 </div>
                 <div className="grid items-center grid-cols-1 justify-center w-full md:w-1/4 px-2">
                     <div className="w-full m-auto card-default">
-                            <form>
+                            <form onSubmit={handleRegister}>
                                 <div className="mb-2">
                                     <p className="text-xs">LET'S GET YOU STARTED</p>
                                 </div>

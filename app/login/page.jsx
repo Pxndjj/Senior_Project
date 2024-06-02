@@ -3,7 +3,7 @@ import { Button, Input } from "@nextui-org/react";
 import logoGoogle from "@/public/google.svg";
 import React, { useState } from "react";
 import Image from "next/image";
-import { signIn } from "next-auth/react"
+import { signIn } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
@@ -24,25 +24,33 @@ export default function Login() {
     }));
   };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    if ((credentials.userEmail == "" || credentials.userPhone == "") && credentials.userPass == "") {
+      setMessageInput("Please enter complete information!");
+    } else {
+      const resUser = await signIn('credentials', { userPass: credentials.userPass, userPhone: credentials.userPhone, userEmail: credentials.userEmail, redirect: false });
+      if (resUser.ok) {
+        setMessagelogin("Success");
+      } else {
+        setMessageInput('Please check your information is correct!');
+      }
+    }
+  };
   return (
-    <main>
-      <div className="flex w-[50rem] m-auto">
+    <main className="flex items-center justify-center min-h-screen">
+      <div className="flex w-[50rem]">
         <div className="w-2/4 m-auto">
-          <div className="text-3xl">
-            <p className="text-4xl">Joyfulwait </p>
-            <p className="mt-2">
-              <span className="ml-2 "><span className="text-hiligh">No more queue line</span></span>
-            </p>
-          </div>
-
+          <div className="text-3xl"><p>Joyfulwait</p></div>
+          <span className="ml-2 "><span className="text-hiligh">No more queue line</span></span>
         </div>
         <div className="w-1/5"></div>
         <div className="w-2/5">
           <div className="m-auto mt-5">
             <>
-              <form>
+              <form onSubmit={handleLogin}>
                 <div className="mb-2">
-                  <p className="text-xs">WELCOME BACK <spen className="text-green-500 text-sm">{messagelogin}</spen></p>
+                  <p className="text-xs">WELCOME BACK <span className="text-green-500 text-sm">{messagelogin}</span></p>
                 </div>
                 <div className="mb-5">
                   <h1 className="font-bold text-2xl">Log In to your Account </h1>
