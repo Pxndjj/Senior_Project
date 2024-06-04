@@ -45,9 +45,8 @@ const handler = NextAuth({
             async authorize(credentials, req) {
                 const resUser = await api.checkUser(credentials);
                 if (!resUser) {
-                    throw new Error("ไม่พบผู้ใช้งาน");
+                    throw new Error("Not found this user.");
                 }
-                //ตรวจสอบสิทธิ์ Register กรณีเป็น admin
                 const checkAdmin = await api.checkAdmin(credentials);
                 const isAdmin = checkAdmin?checkAdmin.email:'';
                 const checkPass = await bcrypt.compare(credentials.userPass, resUser.userPass);
