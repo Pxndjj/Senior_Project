@@ -28,7 +28,6 @@ export default async function RootLayout({ children,params}) {
         {/* Sidebar Section */}
         <RestaurantMenu/>
         {children}
-        {/* <RestaurantRight dataPackage={dataLayout} params={params}/> */}
     </div>
   );
 }
