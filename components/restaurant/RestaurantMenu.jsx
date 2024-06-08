@@ -14,7 +14,7 @@ const RestaurantMenu = () => {
       <div className="toggle">
         <div className="logo">
           <img src="/images/next.svg" />
-          <h2><span className="danger">RS</span></h2>
+          <h2><span className="danger">Joyfulwait</span></h2>
         </div>
         <div onClick={clickClose} className="close">
           <span className="material-symbols-outlined">close</span>
