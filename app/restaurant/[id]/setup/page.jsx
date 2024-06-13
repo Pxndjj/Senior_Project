@@ -73,7 +73,7 @@ export default function Setup() {
       }
     }));
   };
-
+  
   const handleTimeChange = (day, type, value) => {
     const updatedModels = { ...models };
     if (type === 'start') {
