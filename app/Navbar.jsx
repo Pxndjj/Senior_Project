@@ -17,7 +17,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-gradient-to-r from-purple-500 to-pink-500 shadow-lg">
       <div className="flex items-center">
-        <img src="\components\logo\J.png" alt="" className="h-10 mr-4" />
+        <img src="J.png" alt="" className="h-10 mr-4" />
         <span className="text-white text-xl font-bold">Joyfulwait</span>
       </div>
       <div>
