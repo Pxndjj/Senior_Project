@@ -1,5 +1,8 @@
 "use client";
 import { useParams, useRouter, usePathname } from 'next/navigation';
+import { GoPeople } from "react-icons/go";
+import { MdOutlineDashboard } from "react-icons/md";
+import { IoSettingsOutline } from "react-icons/io5";
 const RestaurantMenu = () => {
   const params = useParams();
   const pathName = usePathname();
@@ -22,13 +25,13 @@ const RestaurantMenu = () => {
       </div>
       <div className="sidebar">
         <a className={pName.length > 20 ? 'active' : ''} href={`${bUrl}`}>
-          <span className="material-symbols-outlined">dashboard</span><h3>Dashboard</h3>
+        <MdOutlineDashboard className='w-6 h-6'/><h3>Dashboard</h3>
         </a>
         <a className={pName === 'queue' ? 'active' : ''} href={`${bUrl}/queue`}>
-          <span className="material-symbols-outlined">thumbs_up_down</span><h3>Queue</h3>
+          <GoPeople className='w-6 h-6'/><h3>Queue</h3>
         </a>
         <a className={pName === 'setup' ? 'active' : ''} href={`${bUrl}/setup`}>
-          <span className="material-symbols-outlined">manufacturing</span><h3>Setup Page</h3>
+        <IoSettingsOutline className='w-6 h-6'/><h3>Setup Page</h3>
         </a>
       </div>
     </aside>
