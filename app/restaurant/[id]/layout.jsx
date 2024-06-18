@@ -1,4 +1,5 @@
 import RestaurantMenu from "@/components/restaurant/RestaurantMenu";
+import { ToastContainer} from 'react-toastify';
 import "../../style/admin.css";
 export const metadata = {
   title: "่joyfulwait",
@@ -28,6 +29,7 @@ export default async function RootLayout({ children,params}) {
         {/* Sidebar Section */}
         <RestaurantMenu/>
         {children}
+        <ToastContainer />
     </div>
   );
 }

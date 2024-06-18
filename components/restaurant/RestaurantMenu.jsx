@@ -1,8 +1,5 @@
 "use client";
 import { useParams, useRouter, usePathname } from 'next/navigation';
-import { GoPeople } from "react-icons/go";
-import { MdOutlineDashboard } from "react-icons/md";
-import { IoSettingsOutline } from "react-icons/io5";
 const RestaurantMenu = () => {
   const params = useParams();
   const pathName = usePathname();
@@ -16,7 +13,7 @@ const RestaurantMenu = () => {
     <aside>
       <div className="toggle">
         <div className="logo">
-          <img src="/images/next.svg" />
+          <img src="/J.png" />
           <h2><span className="danger">Joyfulwait</span></h2>
         </div>
         <div onClick={clickClose} className="close">
@@ -25,14 +22,18 @@ const RestaurantMenu = () => {
       </div>
       <div className="sidebar">
         <a className={pName.length > 20 ? 'active' : ''} href={`${bUrl}`}>
-        <MdOutlineDashboard className='w-6 h-6'/><h3>Dashboard</h3>
+          <span className="material-symbols-outlined">dashboard</span><h3>Dashboard</h3>
         </a>
         <a className={pName === 'queue' ? 'active' : ''} href={`${bUrl}/queue`}>
-          <GoPeople className='w-6 h-6'/><h3>Queue</h3>
-        </a>
+          <span className="material-symbols-outlined">thumbs_up_down</span><h3>Queue</h3>
+        </a>                         
         <a className={pName === 'setup' ? 'active' : ''} href={`${bUrl}/setup`}>
-        <IoSettingsOutline className='w-6 h-6'/><h3>Setup Page</h3>
+          <span className="material-symbols-outlined">manufacturing</span><h3>Setting Page</h3>
         </a>
+        {/* <a className={pName === 'photos' ? 'active' : ''} href={`${bUrl}/photos`}>
+          <span className="material-symbols-outlined">gallery_thumbnail</span><h3>Gallery</h3>
+        </a> */}
+        <a className={pName === 'bill' ? 'active' : ''} href={`${bUrl}/bill`}></a>
       </div>
     </aside>
   );

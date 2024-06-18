@@ -40,7 +40,6 @@ const handler = NextAuth({
         CredentialsProvider({
             name: "credentials",
             credentials: {
-                //Not use
             },
             async authorize(credentials, req) {
                 const resUser = await api.checkUser(credentials);
