@@ -73,7 +73,7 @@ export default function Setup() {
       }
     }));
   };
-  
+
   const handleTimeChange = (day, type, value) => {
     const updatedModels = { ...models };
     if (type === 'start') {
@@ -87,6 +87,12 @@ export default function Setup() {
   const setAddConditions = () => {
     const updatedModels = { ...models };
     updatedModels.conditions.push("")
+    setModels(updatedModels);
+  }
+
+  const deleteConditions = () => {
+    const updatedModels = { ...models };
+    updatedModels.conditions.pop()
     setModels(updatedModels);
   }
 
@@ -229,17 +235,20 @@ export default function Setup() {
                 <span className="material-symbols-outlined">description</span>
                 <span className="ml-3 mt-1">{models.notes}</span>
               </p>
-              <div className="grid grid-flow-col-dense auto-rows-min w-fit my-3">
-                <span className="material-symbols-outlined">conditions</span>
-                <div className="text-sm">
-                  {models.conditions.map((item, index) => (
-                    <React.Fragment key={index}>
-                      <span className="ml-3 mt-1">{item}</span>
-                      {index !== models.conditions.length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
+              {models.conditions.length > 0 && (
+                <div className="grid grid-flow-col-dense auto-rows-min w-fit my-3">
+                  <span className="material-symbols-outlined">conditions</span>
+                  <div className="text-sm">
+                    {models.conditions.map((item, index) => (
+                      <React.Fragment key={index}>
+                        <span className="ml-3 mt-1">{item}</span>
+                        {index !== models.conditions.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
+
               <div className="grid grid-flow-col-dense auto-rows-min w-fit my-3">
                 <span className="material-symbols-outlined">event_available</span>
                 <div className="text-sm">
@@ -280,6 +289,7 @@ export default function Setup() {
                 ))}
               </div>
               <Button className="bg-orange-100 border-1" onClick={() => setAddConditions()} size={"sm"} startContent={<span className="material-symbols-outlined text-sm">add_circle</span>}>Add Conditions</Button>
+              <Button className="bg-red-100 border-1" onClick={() => deleteConditions()} size={"sm"} startContent={<span className="material-symbols-outlined text-sm">delete</span>}>Delete Conditions</Button>
               <p className="text-[12.5px] mx-1 mt-3">Restaurant Open</p>
 
               <div className="flex my-1">
