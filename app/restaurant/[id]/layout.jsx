@@ -1,4 +1,5 @@
 import RestaurantMenu from "@/components/restaurant/RestaurantMenu";
+import RestaurantRight from "@/components/restaurant/RestaurantRight";
 import { ToastContainer} from 'react-toastify';
 import "../../style/admin.css";
 export const metadata = {
@@ -29,6 +30,7 @@ export default async function RootLayout({ children,params}) {
         {/* Sidebar Section */}
         <RestaurantMenu/>
         {children}
+        <RestaurantRight dataPackage={dataLayout} params={params}/>
         <ToastContainer />
     </div>
   );

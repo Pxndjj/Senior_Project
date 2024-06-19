@@ -5,7 +5,6 @@ import _ from 'lodash';
 function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
   const itemsPerPage = 5;
 
-  // สร้าง state สำหรับการจัดการหน้าของแต่ละตาราง
   const [pageStates, setPageStates] = useState({});
 
   const queueStatus = (status) => {

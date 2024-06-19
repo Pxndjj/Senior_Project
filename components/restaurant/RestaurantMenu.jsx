@@ -30,9 +30,9 @@ const RestaurantMenu = () => {
         <a className={pName === 'setup' ? 'active' : ''} href={`${bUrl}/setup`}>
           <span className="material-symbols-outlined">manufacturing</span><h3>Setting Page</h3>
         </a>
-        {/* <a className={pName === 'photos' ? 'active' : ''} href={`${bUrl}/photos`}>
+        <a className={pName === 'photos' ? 'active' : ''} href={`${bUrl}/photos`}>
           <span className="material-symbols-outlined">gallery_thumbnail</span><h3>Gallery</h3>
-        </a> */}
+        </a>
         <a className={pName === 'bill' ? 'active' : ''} href={`${bUrl}/bill`}></a>
       </div>
     </aside>
