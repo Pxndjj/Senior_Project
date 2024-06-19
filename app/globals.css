@@ -160,3 +160,10 @@ body{
 .text-webkit-center{
   text-align: -webkit-center;
 }
+
+.bg-image-default {
+  position: relative;
+  background-image: url("/images/preview-img.jpg");
+  background-size: cover;
+  background-position: center;
+}
