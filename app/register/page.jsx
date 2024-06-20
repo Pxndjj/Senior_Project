@@ -150,7 +150,18 @@ export default function Register() {
                                 <Input type="text" name="userName" value={credentials.userName} onChange={handleChange} label="User Name" variant="bordered" placeholder="name" className="m-auto" />
                             </div>
                             <div className="my-3">
-                                <Input type="text" name="userPhone" value={credentials.userPhone} onChange={handleChange} label="Phone" variant="bordered" placeholder="phone-number" className="m-auto" />
+                                <Input
+                                    type="text"
+                                    name="userPhone"
+                                    value={credentials.userPhone}
+                                    onChange={handleChange}
+                                    label="Phone"
+                                    variant="bordered"
+                                    placeholder="phone-number"
+                                    className="m-auto"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
+                                />
                             </div>
                             <div className="my-3">
                                 <Input type="email" name="userEmail" value={credentials.userEmail} onChange={handleChange} label="E-mail" variant="bordered" placeholder="@gmail.com" className="m-auto" />
@@ -178,7 +189,7 @@ export default function Register() {
                         </div>
                         <div className="mt-4 text-center">
                             <p className="w-full" style={{ transition: "color 0.3s" }}>
-                            Already have an account? <span className="cursor-pointer" onClick={handleLogin} style={{ color: "#1E90FF", transition: "color 0.3s" }}
+                                Already have an account? <span className="cursor-pointer" onClick={handleLogin} style={{ color: "#1E90FF", transition: "color 0.3s" }}
                                     onMouseEnter={(e) => e.target.style.color = "#104E8B"}
                                     onMouseLeave={(e) => e.target.style.color = "#1E90FF"}>Login</span>
                             </p>
