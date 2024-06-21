@@ -29,7 +29,7 @@ function AddQueue({ userID, fetchData }) {
   const [partySize, setPartySize] = useState("");
 
   const [valueDateTime, setValueDateTime] = useState(
-    toCalendarDateTime(now(getLocalTimeZone(), new Date()))
+    toCalendarDateTime(now(getLocalTimeZone(), new Date() * 60000))
   );
 
   const [modelAdd, setModelsAdd] = useState({
@@ -156,7 +156,7 @@ function AddQueue({ userID, fetchData }) {
                   </div>
                   <div className="w-[4%]"></div>
                   <div className="w-[74%]">
-                    <DatePicker label="Booking Date" name="time_of_booking" value={valueDateTime} onChange={setValueDateTime} variant="bordered" hourCycle={24} placeholderValue={now("Asia/Bangkok")} showMonthAndYearPickers />
+                    <DatePicker label="Booking Date" name="time_of_booking" value={valueDateTime} onChange={setValueDateTime} variant="bordered" hourCycle={24} placeholderValue={now("Asia/Bangkok")} showMonthAndYearPickers minValue={today} />
                   </div>
                 </div>
 
