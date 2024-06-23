@@ -164,7 +164,7 @@ function AddQueue({ userID, fetchData }) {
                 {alertMessage && <div className="text-red-500">{alertMessage}</div>}
                 <div className="flex mt-1">
                   <div className="w-[22%]">
-                    <Input value={partySize} onChange={handlePartySizeChange} placeholder="other" variant="bordered" size={"md"} type="text" label="Party Size" className="custom-input" />
+                    <Input value={partySize} onChange={handlePartySizeChange} placeholder="other" variant="bordered" size={"md"} type="number" label="Party Size" className="custom-input" />
                   </div>
                   <div className="w-[4%]"></div>
                   <div className="w-[74%]">
