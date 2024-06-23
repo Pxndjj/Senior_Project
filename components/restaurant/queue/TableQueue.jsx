@@ -176,7 +176,7 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
                             ""
                           )
                         ) : (
-                          <span className="used-pastdue">PAST DUE</span>
+                          <span className="used-pastdue">up coming</span>
                         )}
                       </td>
                     </tr>

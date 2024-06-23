@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Dropdown, DropdownMenu, DropdownTrigger, DropdownItem, Button, useDisclosure, Modal, ModalFooter, ModalHeader, ModalContent, ModalBody, Input, DatePicker, } from "@nextui-org/react";
-import { now, getLocalTimeZone, toCalendarDateTime, } from "@internationalized/date";
+import { now, getLocalTimeZone, toCalendarDateTime, today } from "@internationalized/date";
 import { Radio, cn } from "@nextui-org/react";
+import { before } from "lodash";
 
 export const CustomRadio = (props) => {
   const { children, ...otherProps } = props;
@@ -27,6 +28,7 @@ function AddQueue({ userID, fetchData }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [selectedKeys, setSelectedKeys] = useState(new Set(["Wait"]));
   const [partySize, setPartySize] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
 
   const [valueDateTime, setValueDateTime] = useState(
     toCalendarDateTime(now(getLocalTimeZone(), new Date() * 60000))
@@ -63,6 +65,16 @@ function AddQueue({ userID, fetchData }) {
         ...prev,
         party_size: value,
       }));
+    }
+  };
+
+  const handleDateChange = (date) => {
+    const nowDateTime = toCalendarDateTime(now(getLocalTimeZone(), new Date() * 60000));
+    if (date < nowDateTime) {
+      setAlertMessage("Please select the correct date and time.");
+    } else {
+      setAlertMessage("");
+      setValueDateTime(date);
     }
   };
 
@@ -119,7 +131,6 @@ function AddQueue({ userID, fetchData }) {
     }
   };
 
-  const today = now("Asia/Bangkok");
   const selectedValue = React.useMemo(
     () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
     [selectedKeys]
@@ -150,13 +161,15 @@ function AddQueue({ userID, fetchData }) {
             <>
               <ModalHeader className="flex flex-col gap-1">Detail Queue</ModalHeader>
               <ModalBody>
+                {alertMessage && <div className="text-red-500">{alertMessage}</div>}
                 <div className="flex mt-1">
                   <div className="w-[22%]">
                     <Input value={partySize} onChange={handlePartySizeChange} placeholder="other" variant="bordered" size={"md"} type="text" label="Party Size" className="custom-input" />
                   </div>
                   <div className="w-[4%]"></div>
                   <div className="w-[74%]">
-                    <DatePicker label="Booking Date" name="time_of_booking" value={valueDateTime} onChange={setValueDateTime} variant="bordered" hourCycle={24} placeholderValue={now("Asia/Bangkok")} showMonthAndYearPickers minValue={today} />
+                    <DatePicker label="Booking Date" name="time_of_booking" value={valueDateTime} onChange={handleDateChange} variant="bordered" hourCycle={24} placeholderValue={now("Asia/Bangkok")} showMonthAndYearPickers minValue={today(getLocalTimeZone())}
+                      defaultValue={today(getLocalTimeZone()).subtract({ days: 1 })} />
                   </div>
                 </div>
 
