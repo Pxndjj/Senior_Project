@@ -9,6 +9,7 @@ import moment from "moment";
 export default function Setup() {
   const params = useParams();
   const [showImage, setShowImage] = useState("");
+  const [fileImageError, setFileImageError] = useState("");
   const [models, setModels] = useState({
     name: "",
     address: "",
@@ -115,7 +116,7 @@ export default function Setup() {
   };
 
   const actionSaveData = async () => {
-    models.conditions.filter((o) => o !== "");
+    models.conditions = models.conditions.filter((o) => o !== "");
     models.refID = params.id;
     const formData = new FormData();
     formData.append('file', file);
@@ -140,15 +141,15 @@ export default function Setup() {
   }
 
   const handleChange = async (event) => {
+    setFileImageError("")
     event.preventDefault();
     const updatedModels = { ...models };
-    if (!event.target.files || !event.target.files[0].name.match(/\.(jpg|jpeg|png)$/)) {
-      setFileImageError("Invalid file type. Please upload an image (jpg, jpeg, png)")
+    const selectedFile = event.target.files[0];
+    if (!selectedFile || !selectedFile.name.match(/\.(jpg|jpeg|png)$/)) {
+      setFileImageError("Invalid file type. Please upload an image (jpg, jpeg, png)");
       return;
     }
-    updatedModels.logo = event.target.files[0].name;
-    const selectedFile = event.target.files[0];
-    if (!selectedFile) return;
+    updatedModels.logo = selectedFile.name;
     setFile(selectedFile);
     setShowImage(URL.createObjectURL(selectedFile));
     setModels(updatedModels);
@@ -213,10 +214,12 @@ export default function Setup() {
                   <input type="file" id="file-upload" accept="image/*" multiple className="absolute hidden" onChange={handleChange} />
                 </label>
               </div>
-
           }
         </div>
       </div>
+      {fileImageError && (
+        <div className="text-red-500 text-sm">{fileImageError}</div>
+      )}
       <div className="grid items-center grid-cols-1 justify-center w-full md:w-4/4 px-2">
         <div className="w-full m-auto card-default">
           <img style={imageStyle} className="img-card" src={showImage} alt={`Photo ${models.logo}`} />
@@ -299,10 +302,10 @@ export default function Setup() {
                 {models.openingHours.sunday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="monday" size={"sm"} defaultValue={new Time(models.openingHours.sunday.start)} onChange={(value) => handleTimeChange("sunday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="sunday" size={"sm"} defaultValue={new Time(models.openingHours.sunday.start)} onChange={(value) => handleTimeChange("sunday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="monday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.sunday.to)} onChange={(value) => handleTimeChange("sunday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="sunday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.sunday.to)} onChange={(value) => handleTimeChange("sunday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -365,10 +368,10 @@ export default function Setup() {
                 {models.openingHours.wednesday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.start)} onChange={(value) => handleTimeChange("wednesday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="wednesday" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.start)} onChange={(value) => handleTimeChange("wednesday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.to)} onChange={(value) => handleTimeChange("wednesday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="wednesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.to)} onChange={(value) => handleTimeChange("wednesday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -387,10 +390,10 @@ export default function Setup() {
                 {models.openingHours.thursday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.thursday.start)} onChange={(value) => handleTimeChange("thursday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="thursday" size={"sm"} defaultValue={new Time(models.openingHours.thursday.start)} onChange={(value) => handleTimeChange("thursday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.thursday.to)} onChange={(value) => handleTimeChange("thursday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="thursday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.thursday.to)} onChange={(value) => handleTimeChange("thursday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -409,10 +412,10 @@ export default function Setup() {
                 {models.openingHours.friday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.friday.start)} onChange={(value) => handleTimeChange("friday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="friday" size={"sm"} defaultValue={new Time(models.openingHours.friday.start)} onChange={(value) => handleTimeChange("friday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.friday.to)} onChange={(value) => handleTimeChange("friday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="friday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.friday.to)} onChange={(value) => handleTimeChange("friday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -431,10 +434,10 @@ export default function Setup() {
                 {models.openingHours.saturday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.saturday.start)} onChange={(value) => handleTimeChange("saturday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="saturday" size={"sm"} defaultValue={new Time(models.openingHours.saturday.start)} onChange={(value) => handleTimeChange("saturday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.saturday.to)} onChange={(value) => handleTimeChange("saturday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="saturday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.saturday.to)} onChange={(value) => handleTimeChange("saturday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (

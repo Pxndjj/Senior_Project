@@ -15,15 +15,20 @@ const postUpload = async (imageObject) => {
         console.error('Error fetching data:', error);
     }
 };
+
 const GalleryUpload = ({ params, totalPhoto }) => {
     const pathname = usePathname();
+    
     const onUpload = async (imagesFiles) => {
-        for (const f of imagesFiles) {
-            await postUpload({ refID: params, file: f });
+        for (const file of imagesFiles) {
+            if (!file.type.startsWith('image/')) {
+                alert('Please upload only image files.');
+                continue;
+            }
+            await postUpload({ refID: params, file });
         }
-        actionRevalidatePath(pathname)
+        actionRevalidatePath(pathname);
     }
-
 
     return (
         <div className="flex items-center justify-center ">
@@ -42,4 +47,5 @@ const GalleryUpload = ({ params, totalPhoto }) => {
         </div>
     )
 }
+
 export default GalleryUpload;

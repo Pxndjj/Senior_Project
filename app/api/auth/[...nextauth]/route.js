@@ -49,6 +49,7 @@ const handler = NextAuth({
                 const checkAdmin = await api.checkAdmin(credentials);
                 const isAdmin = checkAdmin?checkAdmin.email:'';
                 const checkPass = await bcrypt.compare(credentials.userPass, resUser.userPass);
+                // console.log(checkPass)
                 if (checkPass) {
                     return  {
                         id: String(resUser._id), 
