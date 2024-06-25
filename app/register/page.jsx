@@ -57,12 +57,12 @@ export default function Register() {
     const handleRegister = async (e) => {
         e.preventDefault();
         if (
-            credentials.userEmail == "" &&
-            credentials.userName == "" &&
-            credentials.userPass == "" &&
-            credentials.userPhone == ""
+            !credentials.userEmail ||
+            !credentials.userName ||
+            !credentials.userPass ||
+            !credentials.userPhone
         ) {
-            setError("Please fill out the information completely!!!");
+            setError("Please fill out all the fields completely!!!");
             return;
         }
         try {
@@ -79,7 +79,7 @@ export default function Register() {
             if (res.ok) {
                 await signIn("credentials", credentials);
             } else {
-                alert("resgiter unsuccessful");
+                alert("Register unsuccessful");
             }
         } catch (error) {
             console.log(error);
@@ -108,9 +108,6 @@ export default function Register() {
             </div>
         );
     }
-
-    const [isVisible, setIsVisible] = React.useState(false);
-    const toggleVisibility = () => setIsVisible(!isVisible);
 
     return (
         <div className="bg-image-default h-screen flex justify-center items-end">
