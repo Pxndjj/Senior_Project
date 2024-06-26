@@ -8,13 +8,13 @@ const GalleryPreview = ({filePreview}) => {
         setShowDetail(true);
       };
     
-      const handleCloseDialog = () => {
+      const handleCloseItem = () => {
         setShowDetail(false);
       };
     return ( 
         <div className="container-overlay">
             <div onClick={handleItemClick} className="overlay"></div>
-           <GalleryDisplay isOpen={showDetail} onClose={handleCloseDialog} item={filePreview} />
+           <GalleryDisplay isOpen={showDetail} onClose={handleCloseItem} item={filePreview} />
         </div>
     )
     }  
