@@ -43,7 +43,7 @@ export const CustomRadio = (props) => {
 export default function RoleSelect({role,setRole}) {
   return (
     <RadioGroup className="grid items-center"  value={role} onValueChange={setRole}>
-      <CustomRadio description="" value="user">
+      <CustomRadio description="Receive promotions from stores and reserve queues through the system." value="user" value="user">
         User
       </CustomRadio>
       <CustomRadio description="Increase your restaurant's opportunities and grow with us." value="restaurant">

@@ -119,6 +119,15 @@ b{
     background-color:rgb(97, 160, 255);;
     color: white;
 }
+.used-notdue {
+    border-radius: 10px;
+    font-size: 14px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-left: 0.5rem;
+    background-color:rgb(247 208 96);
+    color: white;
+}
 .q-succeed {
     border-radius: 10px;
     font-size: 14px;

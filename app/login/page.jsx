@@ -27,6 +27,7 @@ export default function Login() {
       ...prev,
       [name]: value,
     }));
+    console.log(value)
   };
 
   const handleLogin = async (e) => {
@@ -36,6 +37,7 @@ export default function Login() {
       (credentials.userEmail == "" || credentials.userPhone == "") &&
       credentials.userPass == ""
     ) {
+      console.log("Please enter complete information!")
       setMessageInput("Please enter complete information!");
     } else {
       const resUser = await signIn("credentials", {

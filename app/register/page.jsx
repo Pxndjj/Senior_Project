@@ -52,6 +52,7 @@ export default function Register() {
             ...prev,
             [name]: value,
         }));
+        console.log(value)
     };
     //state event
     const handleRegister = async (e) => {
@@ -61,17 +62,21 @@ export default function Register() {
             !credentials.userName ||
             !credentials.userPass ||
             !credentials.userPhone
+
         ) {
-            setError("Please fill out all the fields completely!!!");
+            console.log("Please fill out all the fields completely!!!")
+            setRegisterError("Please fill out all the fields completely!!!");
             return;
         }
         try {
             const checkUser = await api.checkUserRegister(credentials);
             if (checkUser && checkUser.userPhone == credentials.userPhone) {
+                console.log("This phone has already been used.")
                 setRegisterError("This phone has already been used.");
                 return;
             }
             if (checkUser && checkUser.userEmail == credentials.userEmail) {
+                console.log("This email has already been used.")
                 setRegisterError("This email has already been used.");
                 return;
             }
