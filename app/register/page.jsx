@@ -163,6 +163,7 @@ export default function Register() {
                                     className="m-auto"
                                     inputMode="numeric"
                                     pattern="[0-9]*"
+                                    errorMessage="Please enter only number"
                                 />
                             </div>
                             <div className="my-3">
@@ -170,9 +171,6 @@ export default function Register() {
                             </div>
                             <div className="my-3">
                                 <Input type="password" name="userPass" value={credentials.userPass} onChange={handleChange} label="Password" variant="bordered" placeholder="password" className="m-auto" />
-                            </div>
-                            <div className="my-3">
-                                <p className="text-red-500 w-full text-sm">{error}</p>
                             </div>
                             <div className="my-3">
                                 <p className="text-red-500 w-full text-sm">{registerError}</p>
