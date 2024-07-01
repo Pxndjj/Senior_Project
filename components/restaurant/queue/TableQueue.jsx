@@ -14,7 +14,7 @@ function TebleQueue({ userID, showUsed, showStatus, models, fetchData }) {
       case "C":
         return <span className="q-confirm">confirm</span>;
       case "S":
-        return <span className="q-succeed">succeed</span>;
+        return <span className="q-success">success</span>;
       case "X":
         return <span className="q-cancel">cancel</span>;
       default:
@@ -188,7 +188,7 @@ function TebleQueue({ userID, showUsed, showStatus, models, fetchData }) {
                           <DropdownMenu aria-label="Static Actions">
                             {item.queue_status === "C" ? ("") : (<DropdownItem className="text-green-300" onClick={() => updateStatus("C", item)}>confirm</DropdownItem>)}
                             {item.queue_status === "X" ? ("") : (<DropdownItem className="text-red-300" onClick={() => updateStatus("X", item)}>cancel</DropdownItem>)}
-                            {item.queue_status === "S" ? ("") : (<DropdownItem className="text-gray-400" onClick={() => updateStatus("S", item)}>succeed</DropdownItem>)}
+                            {item.queue_status === "S" ? ("") : (<DropdownItem className="text-gray-400" onClick={() => updateStatus("S", item)}>success</DropdownItem>)}
                           </DropdownMenu>
                         </Dropdown>
                       </td>
