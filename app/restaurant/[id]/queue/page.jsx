@@ -87,7 +87,7 @@ export default function Queue() {
                   <DropdownItem startContent={<span className="material-symbols-outlined">select_all</span>} key="all" className="text-blue-300" onClick={() => setShowStatus("ALL")}>All Status</DropdownItem>
                   <DropdownItem startContent={<span className="material-symbols-outlined">check_circle</span>} key="confirm" className="text-green-300" onClick={() => setShowStatus("C")}>Confirm</DropdownItem>
                   <DropdownItem startContent={<span className="material-symbols-outlined">cancel</span>} key="success" className="text-red-300" onClick={() => setShowStatus("X")}>Cancel</DropdownItem>
-                  <DropdownItem startContent={<span className="material-symbols-outlined">recommend</span>} key="cancel" className="text-gray-400" onClick={() => setShowStatus("S")}>Succeed</DropdownItem>
+                  <DropdownItem startContent={<span className="material-symbols-outlined">recommend</span>} key="cancel" className="text-gray-400" onClick={() => setShowStatus("S")}>Success</DropdownItem>
                   <DropdownItem startContent={<span className="material-symbols-outlined">hourglass_top</span>} key="wait" className="text-orange-300" onClick={() => setShowStatus("W")}>Wait</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
