@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, AvatarIcon, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import Image from "next/image";
-import bannerApp from '@/public/j.png';
+// import bannerApp from '@/public/j.png';
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
@@ -27,7 +27,7 @@ const NavbarComponent = () => {
     <Navbar isBordered maxWidth="full" className="z-[4000]">
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
-          <Image src={bannerApp} alt="bannerApp" width={60} height={60} />
+          {/* <Image src={bannerApp} alt="bannerApp" width={60} height={60} /> */}
           <p className="hidden sm:block font-bold text-inherit">JoyfulWait</p>
         </NavbarBrand>
       </NavbarContent>
