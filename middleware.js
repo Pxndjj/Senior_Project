@@ -3,22 +3,29 @@ import { NextResponse } from 'next/server';
 import { getToken } from "next-auth/jwt";
 const regexGuest=(cPath)=>{
   if(cPath=="") return false;
-  let regexGuest=["restaurant","role"]; 
-  let isRegex = regexGuest.some(item => item.startsWith(cPath));
+  let regexGuest=["admin","restaurant","role"]; 
+  let isRegex = regexGuest.some(item => item.startsWith(cPath)); //ควบคุมการเข้าถึง path 
   return isRegex
 }
 
 const regexRestaurant=(cPath)=>{
   if(cPath=="") return false;
-  let regexRestaurant=["register","login","role"]; 
-  let isRegex = regexRestaurant.some(item => item.startsWith(cPath));
+  let regexRestaurant=["admin","register","login","role"]; 
+  let isRegex = regexRestaurant.some(item => item.startsWith(cPath)); //ควบคุมการเข้าถึง path 
+  return isRegex
+}
+
+const regexAdmin=(cPath)=>{
+  if(cPath=="") return false;
+  let regexAdmin=["restaurant","register","login","role"]; 
+  let isRegex = regexAdmin.some(item => item.startsWith(cPath)); //ควบคุมการเข้าถึง path 
   return isRegex
 }
 
 const regexUser=(cPath)=>{
   if(cPath=="") return false;
-  let regexUser=["restaurant","register","login","role"]; 
-  let isRegex = regexUser.some(item => item.startsWith(cPath)); 
+  let regexUser=["restaurant","register","login","role","admin"]; 
+  let isRegex = regexUser.some(item => item.startsWith(cPath)); //ควบคุมการเข้าถึง path 
   return isRegex
 }
 
@@ -34,10 +41,12 @@ const api = {
 export default withAuth(
   async function middleware(request){
     const _token = await getToken({req:request,secret:process.env.NEXTAUTH_SECRET});
+    //ตรวจสอบการเข้าถึง route ต่าง ๆ 
     let currentPath = String(request.nextUrl.pathname).split("/").filter(url=>url!=='')[0];
 
 
     if (!_token){ //case guest
+        //ปัดกลับไปหน้าแรก
         if (regexGuest(currentPath)) {
           return NextResponse.redirect(new URL('/login', request.url))  
         }

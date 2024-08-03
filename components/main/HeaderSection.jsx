@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import bannerImage from '@/public/images/preview-img.jpg';
 import logoImage from '@/public/images/logo.png';  // Import the logo image

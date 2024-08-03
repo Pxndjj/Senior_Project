@@ -1,6 +1,26 @@
-"use client"
 import HeaderSection from '@/components/main/HeaderSection';
 import RestaurantList from '@/components/main/RestaurantList';
+import dynamic from 'next/dynamic';
+
+const DynamicMapClient = dynamic(() => import('@/components/main/map/DynamicMapClient'), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center h-[40vh]">
+      <div className="text-center">
+        <div className="relative inline-block">
+          <span className="absolute inset-0 flex items-center justify-center">
+            <svg className="animate-spin h-12 w-12 text-teal-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 0116 0H4z"></path>
+            </svg>
+          </span>
+          <span className="relative text-2xl font-bold text-gray-800">Load...</span>
+        </div>
+        <p className="text-sm text-gray-500 mt-2">Please wait a moment...</p>
+      </div>
+    </div>
+  )
+});
 
 export const revalidate = 60;
 
@@ -49,6 +69,7 @@ export default async function Page() {
           </p>
         </div>
 
+        <DynamicMapClient restaurants={restaurants} />
         <RestaurantList restaurants={restaurants} />
       </div>
     </div>

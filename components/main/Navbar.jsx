@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, AvatarIcon, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import Image from "next/image";
-// import bannerApp from '@/public/j.png';
+import bannerApp from '@/public/images/logo.png';
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
@@ -11,14 +11,16 @@ const NavbarComponent = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const excludedPaths = ['/login', '/register', '/restaurant', '/admin'];
+  const excludedPaths = ['/login', '/register', '/restaurant', '/admin' , '/role'];
 
+  // บันทึก path ก่อนหน้าหากไม่มี session
   useEffect(() => {
     if (!session || !excludedPaths.some(path => pathname.startsWith(path))) {
       localStorage.setItem("previousPath", pathname);
     }
   }, [pathname, session]);
 
+  // หากอยู่ในเส้นทางที่ไม่ต้องการแสดง Navbar และไม่มี session
   if ((excludedPaths.some(path => pathname.startsWith(path))) || (!session)) {
     return null;
   }
@@ -27,16 +29,16 @@ const NavbarComponent = () => {
     <Navbar isBordered maxWidth="full" className="z-[4000]">
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
-          {/* <Image src={bannerApp} alt="bannerApp" width={60} height={60} /> */}
-          <p className="hidden sm:block font-bold text-inherit">JoyfulWait</p>
+          <Image src={bannerApp} alt="bannerApp" width={60} height={60} />
+          <p className="hidden sm:block font-bold text-inherit">Juyfullwait</p>
         </NavbarBrand>
       </NavbarContent>
 
       <NavbarContent as="div" className="items-center" justify="end">
-        {session?.user && (
+        {session?.user ? (
           <>
             <div className="text-right">
-              <p className="text-sm font-semibold">Welcome</p>
+              <p className="text-sm font-semibold">สวัสดี</p>
               <p className="text-lg font-bold text-gray-300">{session?.user?.name}</p>
             </div>
             <Dropdown placement="bottom-end">
@@ -56,6 +58,10 @@ const NavbarComponent = () => {
               </DropdownMenu>
             </Dropdown>
           </>
+        ) : (
+          <button onClick={() => router.push('/login')} className="btn-login">
+            Login
+          </button>
         )}
       </NavbarContent>
     </Navbar>
