@@ -54,6 +54,7 @@ const RestaurantDetails = ({ data }) => {
                         src={data.image}
                         alt="Restaurant Logo"
                         className="w-full h-full object-cover rounded-t-xl lg:rounded-tr-none lg:rounded-l-xl"
+                        style={{ maxHeight: '300%', minHeight: '300px', aspectRatio: '16/9' }}
                     />
                 </div>
 
@@ -61,10 +62,10 @@ const RestaurantDetails = ({ data }) => {
                     <div className="text-center lg:text-left mb-6">
                         <h2 className="text-3xl font-bold text-gray-900">{data.name}</h2>
                         <p className="text-sm text-gray-600 mt-1">{data.address}</p>
-                        <p className="text-sm text-gray-600">โทร: {data.phone}</p>
+                        <p className="text-sm text-gray-600">phone: {data.phone}</p>
                     </div>
                     <div className="mb-6">
-                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">เวลาเปิดทำการ</h3>
+                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">Open hour</h3>
                         <ul className="space-y-2 text-gray-700">
                             {Object.keys(data.openingHours).filter(o => o != "_id").map((day) => (
                                 <li key={day} className="flex justify-between text-sm">
@@ -75,11 +76,11 @@ const RestaurantDetails = ({ data }) => {
                         </ul>
                     </div>
                     <div className="mb-6">
-                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">หมายเหตุ</h3>
+                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">Note</h3>
                         <p className="text-gray-700">{data.notes}</p>
                     </div>
                     <div>
-                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">เงื่อนไข</h3>
+                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">Conditions</h3>
                         <ul className="list-disc list-inside space-y-2 text-gray-700">
                             {data.conditions.map((condition, index) => (
                                 <li key={index} className="text-sm">{condition}</li>
