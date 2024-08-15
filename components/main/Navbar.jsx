@@ -1,27 +1,48 @@
-"use client";
+"use client"; // Ensure the component is treated as a Client Component
+
 import React, { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
-import { Navbar, NavbarBrand, NavbarContent, Dropdown, DropdownTrigger, Avatar, AvatarIcon, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  Dropdown,
+  DropdownTrigger,
+  Avatar,
+  AvatarIcon,
+  DropdownMenu,
+  DropdownItem,
+} from "@nextui-org/react";
 import Image from "next/image";
-import bannerApp from '@/public/images/logo.png';
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import bannerApp from "@/public/images/logo.png";
+import { usePathname, useRouter } from "next/navigation";
 
 const NavbarComponent = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
   const router = useRouter();
-  const excludedPaths = ['/login', '/register', '/restaurant', '/admin' , '/role'];
+  const excludedPaths = ["/login", "/register", "/restaurant", "/admin", "/role"];
+  const excludedPaths1 = ["/restaurant", "/admin", "/"];
 
-  // บันทึก path ก่อนหน้าหากไม่มี session
   useEffect(() => {
-    if (!session || !excludedPaths.some(path => pathname.startsWith(path))) {
+    if (!session && !excludedPaths.some((path) => pathname.startsWith(path))) {
       localStorage.setItem("previousPath", pathname);
     }
-  }, [pathname, session]);
+  }, [pathname, session, excludedPaths]);
 
-  // หากอยู่ในเส้นทางที่ไม่ต้องการแสดง Navbar และไม่มี session
-  if ((excludedPaths.some(path => pathname.startsWith(path))) || (!session)) {
+  useEffect(() => {
+    if (excludedPaths1.some((path) => pathname.startsWith(path))) {
+      return;
+    }
+    if (session && status === "authenticated") {
+      const previousPath = localStorage.getItem("previousPath");
+      if (previousPath && previousPath !== pathname) {
+        router.push(previousPath);
+      }
+    }
+  }, [session, status, pathname, router]);
+
+  if (excludedPaths.some((path) => pathname.startsWith(path))) {
     return null;
   }
 
@@ -30,7 +51,12 @@ const NavbarComponent = () => {
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <Image src={bannerApp} alt="bannerApp" width={60} height={60} />
-          <p className="hidden sm:block font-bold text-inherit">Juyfullwait</p>
+          <p
+            className="hidden sm:block font-semibold text-xl text-gray-800 cursor-pointer transition-colors duration-300 ease-in-out"
+            onClick={() => router.push("/")}
+          >
+            Juyfulwait
+          </p>
         </NavbarBrand>
       </NavbarContent>
 
@@ -38,7 +64,7 @@ const NavbarComponent = () => {
         {session?.user ? (
           <>
             <div className="text-right">
-              <p className="text-sm font-semibold">สวัสดี</p>
+              <p className="text-sm font-semibold">Hi</p>
               <p className="text-lg font-bold text-gray-300">{session?.user?.name}</p>
             </div>
             <Dropdown placement="bottom-end">
@@ -52,16 +78,51 @@ const NavbarComponent = () => {
                 />
               </DropdownTrigger>
               <DropdownMenu aria-label="Profile Actions" variant="flat">
-                <DropdownItem key="logout" color="danger" onClick={() => signOut()}>
+                {session?.user?.role === "restaurant" ? (
+                  <DropdownItem
+                    startContent={<span className="material-symbols-outlined">restaurant_menu</span>}
+                    key="go-to-restaurant"
+                    onClick={() => router.push(`/restaurant/${session?.user?.id}`)}
+                  >
+                    Go To Restaurant
+                  </DropdownItem>
+                ) : null}
+                {session?.user?.role === "admin" ? (
+                  <DropdownItem
+                    startContent={<span className="material-symbols-outlined">shield_person</span>}
+                    key="go-to-restaurant"
+                    onClick={() => router.push(`/admin/${session?.user?.id}`)}
+                  >
+                    Go To admin
+                  </DropdownItem>
+                ) : null}
+
+                <DropdownItem
+                  startContent={<span className="material-symbols-outlined">logout</span>}
+                  key="logout"
+                  color="danger"
+                  onClick={() => signOut()}
+                >
                   Log Out
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </>
         ) : (
-          <button onClick={() => router.push('/login')} className="btn-login">
-            Login
-          </button>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => router.push("/login")}
+              className="border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded-full hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => router.push("/register")}
+              className="border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded-full hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              Register
+            </button>
+          </div>
         )}
       </NavbarContent>
     </Navbar>

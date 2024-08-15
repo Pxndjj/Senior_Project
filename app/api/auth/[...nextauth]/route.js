@@ -4,13 +4,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from 'bcryptjs';
 //const itemSession = { userName: "", userType: "", userRegisBy: "", userPass: "", userPhone: "", userEmail: "", userImage: "" };
 const api = {
-    checkEmailGoogle:async(credentials)=>{
+    checkEmailGoogle: async (credentials) => {
         const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND}/users/checkemailgoogle?userEmail=${credentials.userEmail}`;
         const response = await fetch(apiUrl);
         const result = await response.json();
         return result
     },
-    registerGoogle:async(credentials)=>{
+    registerGoogle: async (credentials) => {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/users/register`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -18,13 +18,13 @@ const api = {
         });
         return res;
     },
-    checkUser:async(credentials)=>{
+    checkUser: async (credentials) => {
         const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND}/users/checkuserregister?userEmail=${credentials.userEmail}&userPhone=${credentials.userPhone}`;
         const response = await fetch(apiUrl);
         const result = await response.json();
         return result;
     },
-    checkAdmin:async(credentials)=>{
+    checkAdmin: async (credentials) => {
         const apiUrl = `${process.env.NEXT_PUBLIC_BACKEND}/users/checkadmin?userEmail=${credentials.userEmail}`;
         const response = await fetch(apiUrl);
         const result = await response.json();
@@ -40,23 +40,25 @@ const handler = NextAuth({
         CredentialsProvider({
             name: "credentials",
             credentials: {
+                //Not use
             },
             async authorize(credentials, req) {
                 const resUser = await api.checkUser(credentials);
                 if (!resUser) {
-                    throw new Error("Not found this user.");
+                    throw new Error("No User found");
                 }
+                //ตรวจสอบสิทธิ์ Register กรณีเป็น admin
                 const checkAdmin = await api.checkAdmin(credentials);
-                const isAdmin = checkAdmin?checkAdmin.email:'';
+                const isAdmin = checkAdmin ? checkAdmin.email : '';
                 const checkPass = await bcrypt.compare(credentials.userPass, resUser.userPass);
-                // console.log(checkPass)
                 if (checkPass) {
-                    return  {
-                        id: String(resUser._id), 
-                        name: resUser.userName, 
-                        email: resUser.userEmail, 
-                        role: isAdmin!==''?'admin':resUser.userRole, 
-                        image:resUser.userImage
+                    return {
+                        id: String(resUser._id),
+                        name: resUser.userName,
+                        email: resUser.userEmail,
+                        role: isAdmin !== '' ? 'admin' : resUser.userRole,
+                        image: resUser.userImage,
+                        phone: resUser.userPhone
                     }
                 } else {
                     return null
@@ -70,30 +72,30 @@ const handler = NextAuth({
     ],
     callbacks: {
         async signIn(data) {
-            
+
             if (data.account.provider === "google") {
-                 const res = await api.checkEmailGoogle(data.user.email);
-                 if (!res) {
-                     let objCredentials={ userName: data.user.name, userRole: "", userRegisBy: data.account.provider, userPass: "", userPhone: "", userEmail: data.user.email, userImage: data.user.image }
-                     await api.registerGoogle(objCredentials);
-                 }
+                const res = await api.checkEmailGoogle(data.user.email);
+                if (!res) {
+                    let objCredentials = { userName: data.user.name, userRole: "", userRegisBy: data.account.provider, userPass: "", userPhone: "", userEmail: data.user.email, userImage: data.user.image }
+                    await api.registerGoogle(objCredentials);
+                }
             }
             return true
         },
-        jwt ({token,user,session,trigger}) {
-            if(user){
+        jwt({ token, user, session, trigger }) {
+            if (user) {
                 token.id = user.id;
                 token.role = user.role;
                 token.email = user.email;
                 token.image = user.image;
             }
             //case update session
-            if(trigger=="update"&& session) {
-                token.role = session.role;      
+            if (trigger == "update" && session) {
+                token.role = session.role;
             }
             return token
         },
-        async session({ session, token}) {
+        async session({ session, token }) {
             session.user.id = token.id;
             session.user.role = token.role;
             session.user.email = token.email;

@@ -39,7 +39,7 @@ const Role = () => {
                 window.location =`${process.env.NEXT_PUBLIC_BASE_URL}/restaurant/${res._id}`;
               break;
               default:
-                window.location =`${process.env.NEXT_PUBLIC_BASE_URL}/user`;
+                window.location =`${process.env.NEXT_PUBLIC_BASE_URL}/admin`;
             }
 
           } 
@@ -56,27 +56,29 @@ const Role = () => {
     }
     if(session?.user?.role=='') {
       return (
-        <main className="md:w-[92rem] md:px-6">
-      <div className="md:flex m-auto h-100vh">
-      <div className="grid items-center grid-cols-1 justify-center w-full md:w-2/3 m-auto text-center h-30vh">
-                <div className="w-2/4 m-auto">
-                    <p className="text-3xl">Joyfulwait </p>
-                    <div><h2>Hello, {session.user.name} We want you to clearly specify the type of user.</h2></div>                                               
+        <main className="md:w-[80rem] md:px-6">
+          <div className="md:flex m-auto h-100vh">
+          <div className="grid items-center grid-cols-1 justify-center w-full md:w-3/4 m-auto text-center h-30vh">
+            <div>
+                <p className="text-4xl">Joyfulwait </p>
+                <p className="mt-2">
+                <span className="ml-2 "><span  className="text-hiligh">Hi, </span> We require you to clearly specify the type of use. </span>
+                </p>
+            </div>          
+          </div>
+            <div className="grid items-center grid-cols-1 justify-center w-full md:w-1/3 px-2">
+            <div className="w-full m-auto card-default">
+            <form className="py-8 grid items-center grid-cols-1 justify-center" onSubmit={handleOnSubmit}>
+            <p className="text-2xl my-4 text-center">Select your user type </p>
+              <RoleSelect role={role} setRole={setRole}/>
+                <div className="my-3">
+                  <Button className="w-full" type="submit">Next</Button>
                 </div>
-      </div>
-        <div className="grid items-center grid-cols-1 justify-center w-full md:w-1/3 px-2">
-        <div className="w-full m-auto card-default">
-        <form className="py-8 grid items-center grid-cols-1 justify-center" onSubmit={handleOnSubmit}>
-        <p className="text-2xl my-4 text-center">type of user </p>
-          <RoleSelect role={role} setRole={setRole}/>
-            <div className="my-3">
-              <Button className="w-full" type="submit">GET START</Button>
+                </form>
+                </div>
             </div>
-            </form>
-            </div>
-        </div>
-      </div>
-    </main>
+          </div>
+        </main>
       );
     }
 };
