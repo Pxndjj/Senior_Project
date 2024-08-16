@@ -15,10 +15,6 @@ const Footer = () => {
                 <p className="text-lg font-semibold mb-4">JoyfulWait</p>
                 <p className="text-sm mb-4">Providing a seamless dining experience. Find and book your favorite restaurants with ease.</p>
                 <p className="text-sm">&copy; {new Date().getFullYear()} JoyfulWait. All rights reserved.</p>
-                <div className="mt-4">
-                    <a href="#" className="text-gray-400 hover:text-gray-300 mx-2">Privacy Policy</a>
-                    <a href="#" className="text-gray-400 hover:text-gray-300 mx-2">Terms of Service</a>
-                </div>
             </div>
         </footer>
     );

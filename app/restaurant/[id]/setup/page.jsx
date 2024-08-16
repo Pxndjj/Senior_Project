@@ -1,15 +1,18 @@
 "use client"
-import React, { useEffect, useState } from "react";
-import { Button, Image, Input, Checkbox } from "@nextui-org/react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Button, Image, Input, Checkbox, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Pagination, getKeyValue } from "@nextui-org/react";
 import { TimeInput } from "@nextui-org/react";
 import { Time } from "@internationalized/date"
 import { useParams } from "next/navigation";
 import moment from "moment";
+import MessageBox from "@/components/messagebox/MessageBox";
 
 export default function Setup() {
   const params = useParams();
   const [showImage, setShowImage] = useState("");
-  const [fileImageError, setFileImageError] = useState("");
+  const [dataFile, setDataFile] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [models, setModels] = useState({
     name: "",
     address: "",
@@ -30,9 +33,15 @@ export default function Setup() {
     longitude: 0,
     reservationRequired: false,
     status: "",
-    refID: "",
+    refID: "123",
     _id: "",
   });
+
+
+  const handleViewClick = (fileName) => {
+    const fileUrl = `${process.env.NEXT_PUBLIC_BACKEND}/uploadfile/preview/${fileName}`;
+    setSelectedFile(fileUrl);
+  };
 
   const fetchData = async () => {
     try {
@@ -52,12 +61,57 @@ export default function Setup() {
     }
   };
 
+  const fetchDataFile = async (id) => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/uploadfile/get/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      return [];
+    }
+  };
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("");
+
+  const showMessage = (msg, statusType) => {
+    setMessage(msg);
+    setStatus(statusType);
+    setTimeout(() => {
+      setMessage("");
+      setStatus("");
+    }, 3000);
+  };
+  const fetchFile = async () => {
+    const data = await fetchDataFile(models.refID);
+    setDataFile(data);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    fetchData();
+    const fetchDataAndFile = async () => {
+      await fetchData();
+      fetchFile();
+    };
+
+    fetchDataAndFile();
+
     return () => {
       console.log('Component unmounted');
     };
-  }, []);
+  }, [models.refID]);
+
 
   const [actionEdit, setActionEdit] = useState(true);
   const [file, setFile] = useState(null);
@@ -91,12 +145,6 @@ export default function Setup() {
     setModels(updatedModels);
   }
 
-  const deleteConditions = () => {
-    const updatedModels = { ...models };
-    updatedModels.conditions.pop()
-    setModels(updatedModels);
-  }
-
   const handleChangeData = (e) => {
     const { name, value } = e.target;
     setModels((prev) => ({
@@ -116,7 +164,7 @@ export default function Setup() {
   };
 
   const actionSaveData = async () => {
-    models.conditions = models.conditions.filter((o) => o !== "");
+    models.conditions.filter((o) => o !== "");
     models.refID = params.id;
     const formData = new FormData();
     formData.append('file', file);
@@ -128,6 +176,7 @@ export default function Setup() {
         body: formData
       });
       if (res.ok) {
+        showMessage("setup succeeded!", "success")
         setActionEdit(true)
       }
     } catch (error) {
@@ -135,21 +184,21 @@ export default function Setup() {
     }
   }
 
-  const actionCancekData = async () => {
+  const actionCancelData = async () => {
     fetchData();
     setActionEdit(true)
   }
 
   const handleChange = async (event) => {
-    setFileImageError("")
     event.preventDefault();
     const updatedModels = { ...models };
-    const selectedFile = event.target.files[0];
-    if (!selectedFile || !selectedFile.name.match(/\.(jpg|jpeg|png)$/)) {
-      setFileImageError("Invalid file type. Please upload an image (jpg, jpeg, png)");
+    if (!event.target.files || !event.target.files[0].name.match(/\.(jpg|jpeg|png)$/)) {
+      setFileImageError("Invalid file type. Please upload an image (jpg, jpeg, png)")
       return;
     }
-    updatedModels.logo = selectedFile.name;
+    updatedModels.logo = event.target.files[0].name;
+    const selectedFile = event.target.files[0];
+    if (!selectedFile) return;
     setFile(selectedFile);
     setShowImage(URL.createObjectURL(selectedFile));
     setModels(updatedModels);
@@ -175,21 +224,58 @@ export default function Setup() {
     }
   };
 
+
+  const upload = async (event) => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      console.error('No file selected');
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('id', params.id);
+    const formDataObj = {};
+    formData.forEach((value, key) => {
+      formDataObj[key] = value;
+    });
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/uploadfile/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      if (res.ok) {
+        showMessage("upload succeeded!", "success")
+        fetchFile();
+        setActionEdit(true);
+      }
+    } catch (error) {
+      console.error('Error uploading file: ', error);
+    }
+  };
+
   const imageStyle = {
-    height: "300px",
-    width: "1150px"
+    height: "340px",
   }
 
   return (
     <main className="main-content mt-1 card-standard">
+      {message && <MessageBox message={message} status={status} />}
       <div className="flex justify-between pb-5">
-        <h2>Restaurant/Setup</h2>
-        <div className="text-right w-full">
+        <h2>Restaurant/Setup {models.status === "inactive" ? <span className="text-warning-400">{models.status}</span> : <span className="text-green-400">{models.status}</span>}</h2>
+        <div className="text-right">
           {
             actionEdit ?
               <>
-                <div className="flex items-end justify-end ">
-                  <label className="relative cursor-pointer hover:bg-gray-500 bg-gray-300 text-gray-700 hover:text-white font-semibold py-2 px-4 rounded-2xl flex items-center">
+                <div className="flex items-end justify-end">
+                  <label className="relative cursor-pointer hover:bg-gray-500 bg-blue-300 text-gray-700 hover:text-white font-semibold py-2 px-4 rounded-2xl flex items-center">
+                    <span className="material-symbols-outlined">upload_file</span>
+                    <span className="text-base">Upload File</span>
+                    <input type="file" className="absolute hidden" onChange={upload} />
+                  </label>
+                  <label className="mx-5 relative cursor-pointer hover:bg-gray-500 bg-gray-300 text-gray-700 hover:text-white font-semibold py-2 px-4 rounded-2xl flex items-center">
                     <span className="material-symbols-outlined mr-2 text-sm">edit</span>
                     <span className="text-base">Edit Page</span>
                     <input className="absolute hidden" onClick={() => setActionEdit(false)} />
@@ -201,7 +287,7 @@ export default function Setup() {
                 <label className="relative cursor-pointer hover:bg-red-700 bg-red-400 text-gray-700 hover:text-white font-semibold py-2 px-4 rounded-2xl flex items-center">
                   <span className="material-symbols-outlined mr-2 text-sm">cancel</span>
                   <span className="text-base">Cancel</span>
-                  <input className="absolute hidden" onClick={() => actionCancekData()} />
+                  <input className="absolute hidden" onClick={() => actionCancelData()} />
                 </label>
                 <label className="mx-3 relative cursor-pointer hover:bg-green-700 bg-green-400 text-gray-700 hover:text-white font-semibold py-2 px-4 rounded-2xl flex items-center">
                   <span className="material-symbols-outlined mr-2 text-sm">save</span>
@@ -214,14 +300,12 @@ export default function Setup() {
                   <input type="file" id="file-upload" accept="image/*" multiple className="absolute hidden" onChange={handleChange} />
                 </label>
               </div>
+
           }
         </div>
       </div>
-      {fileImageError && (
-        <div className="text-red-500 text-sm">{fileImageError}</div>
-      )}
-      <div className="grid items-center grid-cols-1 justify-center w-full md:w-4/4 px-2">
-        <div className="w-full m-auto card-default">
+      <div className="flex justify-center md:w-4/4 px-2">
+        <div className="w-[60%] card-default">
           <img style={imageStyle} className="img-card" src={showImage} alt={`Photo ${models.logo}`} />
           {actionEdit ? (
             <>
@@ -238,20 +322,17 @@ export default function Setup() {
                 <span className="material-symbols-outlined">description</span>
                 <span className="ml-3 mt-1">{models.notes}</span>
               </p>
-              {models.conditions.length > 0 && (
-                <div className="grid grid-flow-col-dense auto-rows-min w-fit my-3">
-                  <span className="material-symbols-outlined">conditions</span>
-                  <div className="text-sm">
-                    {models.conditions.map((item, index) => (
-                      <React.Fragment key={index}>
-                        <span className="ml-3 mt-1">{item}</span>
-                        {index !== models.conditions.length - 1 && <br />}
-                      </React.Fragment>
-                    ))}
-                  </div>
+              <div className="grid grid-flow-col-dense auto-rows-min w-fit my-3">
+                <span className="material-symbols-outlined">conditions</span>
+                <div className="text-sm">
+                  {models.conditions.map((item, index) => (
+                    <React.Fragment key={index}>
+                      <span className="ml-3 mt-1">{item}</span>
+                      {index !== models.conditions.length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
                 </div>
-              )}
-
+              </div>
               <div className="grid grid-flow-col-dense auto-rows-min w-fit my-3">
                 <span className="material-symbols-outlined">event_available</span>
                 <div className="text-sm">
@@ -292,7 +373,6 @@ export default function Setup() {
                 ))}
               </div>
               <Button className="bg-orange-100 border-1" onClick={() => setAddConditions()} size={"sm"} startContent={<span className="material-symbols-outlined text-sm">add_circle</span>}>Add Conditions</Button>
-              <Button className="bg-red-100 border-1" onClick={() => deleteConditions()} size={"sm"} startContent={<span className="material-symbols-outlined text-sm">delete</span>}>Delete Conditions</Button>
               <p className="text-[12.5px] mx-1 mt-3">Restaurant Open</p>
 
               <div className="flex my-1">
@@ -302,10 +382,10 @@ export default function Setup() {
                 {models.openingHours.sunday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="sunday" size={"sm"} defaultValue={new Time(models.openingHours.sunday.start)} onChange={(value) => handleTimeChange("sunday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="monday" size={"sm"} defaultValue={new Time(models.openingHours.sunday.start)} onChange={(value) => handleTimeChange("sunday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="sunday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.sunday.to)} onChange={(value) => handleTimeChange("sunday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="monday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.sunday.to)} onChange={(value) => handleTimeChange("sunday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -368,10 +448,10 @@ export default function Setup() {
                 {models.openingHours.wednesday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="wednesday" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.start)} onChange={(value) => handleTimeChange("wednesday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.start)} onChange={(value) => handleTimeChange("wednesday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="wednesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.to)} onChange={(value) => handleTimeChange("wednesday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.wednesday.to)} onChange={(value) => handleTimeChange("wednesday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -390,10 +470,10 @@ export default function Setup() {
                 {models.openingHours.thursday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="thursday" size={"sm"} defaultValue={new Time(models.openingHours.thursday.start)} onChange={(value) => handleTimeChange("thursday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.thursday.start)} onChange={(value) => handleTimeChange("thursday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="thursday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.thursday.to)} onChange={(value) => handleTimeChange("thursday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.thursday.to)} onChange={(value) => handleTimeChange("thursday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -412,10 +492,10 @@ export default function Setup() {
                 {models.openingHours.friday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="friday" size={"sm"} defaultValue={new Time(models.openingHours.friday.start)} onChange={(value) => handleTimeChange("friday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.friday.start)} onChange={(value) => handleTimeChange("friday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="friday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.friday.to)} onChange={(value) => handleTimeChange("friday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.friday.to)} onChange={(value) => handleTimeChange("friday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -434,10 +514,10 @@ export default function Setup() {
                 {models.openingHours.saturday.open === "on" ? (
                   <>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="saturday" size={"sm"} defaultValue={new Time(models.openingHours.saturday.start)} onChange={(value) => handleTimeChange("saturday", 'start', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" size={"sm"} defaultValue={new Time(models.openingHours.saturday.start)} onChange={(value) => handleTimeChange("saturday", 'start', value)} variant="bordered" />
                     </div>
                     <div className="w-auto mx-1">
-                      <TimeInput hourCycle={24} aria-label="saturday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.saturday.to)} onChange={(value) => handleTimeChange("saturday", 'to', value)} variant="bordered" />
+                      <TimeInput hourCycle={24} aria-label="tuesday" labelPlacement="outside-left" label="TO" size={"sm"} defaultValue={new Time(models.openingHours.saturday.to)} onChange={(value) => handleTimeChange("saturday", 'to', value)} variant="bordered" />
                     </div>
                   </>
                 ) : (
@@ -450,6 +530,62 @@ export default function Setup() {
               </div>
             </>
           )}
+        </div>
+        <div className="w-[40%] ml-10 card-default">
+          <h1>upload</h1>
+          <>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <div>
+                {dataFile.length <= 0 ? (
+                  <>
+                    <h1>NO DATA</h1>
+                  </>
+                ) : (
+                  <>
+                    <Table
+                      aria-label="Example table with client-side pagination"
+                      classNames={{
+                        base: "max-h-[190px]",
+                        table: "min-h-[150px]",
+
+                      }}
+                    >
+                      <TableHeader>
+                        <TableColumn>Name</TableColumn>
+                        <TableColumn>View</TableColumn>
+                      </TableHeader>
+                      <TableBody>
+                        {dataFile.map((item, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{item.fileName}</TableCell>
+                            <TableCell>
+                              <Button auto size="sm" color="primary" onClick={() => handleViewClick(item.fileName)}>
+                                View
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+
+                      </TableBody>
+                    </Table>
+
+                    {selectedFile && (
+                      <div className="mt-4">
+                        <iframe
+                          src={selectedFile}
+                          className="w-full h-[30rem]"
+                          title="PDF Viewer"
+                        ></iframe>
+                      </div>
+                    )}
+                  </>
+                )
+                }
+              </div>
+            )}
+          </>
         </div>
       </div>
     </main >
