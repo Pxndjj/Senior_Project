@@ -65,7 +65,7 @@ const RestaurantDetails = ({ data }) => {
                         <p className="text-sm text-gray-600">phone: {data.phone}</p>
                     </div>
                     <div className="mb-6">
-                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">Open hour</h3>
+                        <h3 className="text-2xl font-semibold mb-3 text-gray-900">Opening hour</h3>
                         <ul className="space-y-2 text-gray-700">
                             {Object.keys(data.openingHours).filter(o => o != "_id").map((day) => (
                                 <li key={day} className="flex justify-between text-sm">

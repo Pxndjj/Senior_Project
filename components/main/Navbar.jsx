@@ -55,7 +55,7 @@ const NavbarComponent = () => {
             className="hidden sm:block font-semibold text-xl text-gray-800 cursor-pointer transition-colors duration-300 ease-in-out"
             onClick={() => router.push("/")}
           >
-            Juyfulwait
+            JoyfulWait
           </p>
         </NavbarBrand>
       </NavbarContent>

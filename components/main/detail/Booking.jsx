@@ -27,7 +27,7 @@ const AddQueue = ({ restaurantID }) => {
     const router = useRouter();
     const { data: session } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const [partySize, setPartySize] = useState("1-2");
+    const [partySize, setPartySize] = useState("Enter number");
     const [valueDateTime, setValueDateTime] = useState(toCalendarDateTime(now(getLocalTimeZone(), new Date())));
     const [modelAdd, setModelsAdd] = useState({
         restaurant: "",
@@ -154,7 +154,7 @@ const AddQueue = ({ restaurantID }) => {
                             <Input
                                 value={partySize}
                                 onValueChange={setPartySize}
-                                placeholder="Other"
+                                placeholder="Enter number"
                                 variant="bordered"
                                 size="md"
                                 type="text"
