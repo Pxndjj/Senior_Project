@@ -1,5 +1,6 @@
 "use client";
 import { useParams, useRouter, usePathname } from 'next/navigation';
+import { useSession, signOut } from "next-auth/react"
 const RestaurantMenu = () => {
   const params = useParams();
   const pathName = usePathname();
@@ -33,7 +34,12 @@ const RestaurantMenu = () => {
         <a className={pName === 'photos' ? 'active' : ''} href={`${bUrl}/photos`}>
           <span className="material-symbols-outlined">gallery_thumbnail</span><h3>Gallery</h3>
         </a>
-        <a className={pName === 'bill' ? 'active' : ''} href={`${bUrl}/bill`}></a>
+        <a className='cursor-pointer' href={`/`}>
+        <span className="material-symbols-outlined">storefront</span><h3>Restaurants</h3>
+        </a>
+        <a className='cursor-pointer' onClick={() => signOut()}>
+          <span className="material-symbols-outlined">logout</span><h3>Logout</h3>
+        </a>
       </div>
     </aside>
   );
