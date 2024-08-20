@@ -78,6 +78,7 @@ h3{
 
 small{
     font-size: 0.76rem;
+    color: var(--color-dark-variant);
 }
 
 p{
@@ -87,7 +88,15 @@ p{
 b{
     color: var(--color-dark);
 }
-
+.menu-title {
+    color: var(--color-dark); 
+}
+.list-total-title {
+    color: var(--color-dark); 
+}
+.list-total {
+    color: var(--color-dark-variant);
+}
 .text-muted{
     color: var(--color-info-dark);
 }
@@ -116,7 +125,7 @@ b{
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     margin-left: 0.5rem;
-    background-color:rgb(97, 160, 255);;
+    background-color:rgb(97, 160, 255);
     color: white;
 }
 .used-notdue {
@@ -128,7 +137,7 @@ b{
     background-color:rgb(247 208 96);
     color: white;
 }
-.q-success {
+.q-succeed {
     border-radius: 10px;
     font-size: 14px;
     padding-left: 0.5rem;
@@ -170,7 +179,7 @@ b{
     width: 96%;
     margin: 0 auto;
     gap: 1.8rem;
-    grid-template-columns: 12rem auto 23rem;
+    grid-template-columns: 12rem auto;
 }
 aside{
     height: 100vh;
@@ -556,6 +565,10 @@ aside .sidebar a:hover span{
     margin-bottom: 0.2rem;
 }
 
+.title-msg {
+    color: var(--color-dark);
+}
+
 .right-section .user-profile img{
     width: 11rem;
     height: auto;
@@ -648,7 +661,7 @@ aside .sidebar a:hover span{
 @media screen and (max-width: 1200px) {
     .container-admin{
         width: 95%;
-        grid-template-columns: 7rem auto 23rem;
+        grid-template-columns: 7rem auto;
     }
     /* ซ่อน logo */
     aside .logo h2{
@@ -894,6 +907,49 @@ aside .sidebar a:hover span{
     cursor: pointer;
     color: white;
 }
+
+.card-popular-menu {
+    display: inline-block;
+    border-radius: var(--card-border-radius);
+  }
+
+  .card-popular-menu .card-media {
+    background-position: center;
+    background-size: cover;
+    height: 200px;
+    width: 100%;
+    border-radius: 14px 14px 14px 14px;
+    object-fit: fit;
+
+    position: relative;
+  }
+  .card-popular-menu .block-rating {
+    margin-top: 0.75rem;
+    border-top: 0.5px solid;
+    border-color: var(--line-color);
+    display: flex;
+    justify-content: space-between;
+  }
+  .card-popular-menu .block-rating .label {
+    color: var(--color-dark-variant);
+  }
+  .card-popular-menu .rating {
+    color: darkorange;
+    padding-right: 0.5rem;
+  }
+  .card-popular-menu .card-footer {
+    margin-top: 0.75rem;
+    text-align: left;
+  }  
+  .card-popular-menu .ellipsis-des {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* จำนวนบรรทัดที่ต้องการแสดง */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.5em; /* ความสูงของแต่ละบรรทัด */
+    max-height: 3em; /* ความสูงรวมของสองบรรทัด (line-height * 2) */
+  }
 
 
 

@@ -45,7 +45,7 @@ const handler = NextAuth({
             async authorize(credentials, req) {
                 const resUser = await api.checkUser(credentials);
                 if (!resUser) {
-                    throw new Error("No User found");
+                    throw new Error("Not found this user");
                 }
                 //ตรวจสอบสิทธิ์ Register กรณีเป็น admin
                 const checkAdmin = await api.checkAdmin(credentials);

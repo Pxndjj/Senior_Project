@@ -27,7 +27,7 @@ const AddQueue = ({ restaurantID }) => {
     const router = useRouter();
     const { data: session } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
-    const [partySize, setPartySize] = useState("Enter number");
+    const [partySize, setPartySize] = useState("");
     const [valueDateTime, setValueDateTime] = useState(toCalendarDateTime(now(getLocalTimeZone(), new Date())));
     const [modelAdd, setModelsAdd] = useState({
         restaurant: "",
