@@ -18,6 +18,7 @@ const backgroundStyle = (path) => {
 
 const RestaurantDetails = ({ data, onRefresh }) => {
 
+    // ตรวจสอบว่า data.recommendedMenu เป็นอาร์เรย์หรือไม่
     const recommendedMenu = Array.isArray(data.recommendedMenu) ? data.recommendedMenu : [];
 
     const [message, setMessage] = useState("");
@@ -59,6 +60,32 @@ const RestaurantDetails = ({ data, onRefresh }) => {
         }
     }
 
+    const isInactiive = async (item) => {
+        item.status = "inactive";
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('modelData', JSON.stringify(item));
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/restaurant/update`, {
+                method: 'POST',
+                body: formData
+            });
+            if (res.ok) {
+                showMessage("Inactive succeeded!", "success")
+                setTimeout(() => {
+                    setLoading(false)
+                }, 3000);
+                if (onRefresh) {
+                    onRefresh();
+                }
+            }
+
+        } catch (error) {
+            console.error('Error uploading file: ', error);
+        }
+    }
+
     const carouselRef = useRef(null);
 
     const scrollLeft = () => {
@@ -77,12 +104,12 @@ const RestaurantDetails = ({ data, onRefresh }) => {
             <div className="container mx-auto p-6 lg:p-12">
                 <div className="bg-white shadow-md rounded-xl border border-gray-300 overflow-hidden flex flex-col lg:flex-row">
                     <div className="relative lg:w-2/3 flex-shrink-0">
-                    <img
-                        src={data.image}
-                        alt="Restaurant Logo"
-                        className="w-full h-full object-cover rounded-t-xl lg:rounded-tr-none lg:rounded-l-xl"
-                        style={{ maxHeight: '300%', minHeight: '300px', aspectRatio: '16/9' }}
-                    />
+                        <img
+                            src={data.image}
+                            alt="Restaurant Logo"
+                            className="w-full h-full object-cover rounded-t-xl lg:rounded-tr-none lg:rounded-l-xl"
+                            style={{ maxHeight: '300%', minHeight: '300px', aspectRatio: '16/9' }}
+                        />
                     </div>
 
                     <div className="p-6 lg:w-1/3 flex flex-col">
@@ -94,10 +121,10 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                         <div className="mb-6">
                             <h3 className="text-2xl font-semibold mb-3 text-gray-900">Opening hour</h3>
                             <ul className="space-y-2 text-gray-700">
-                                {Object.keys(data.openingHours).filter(o => o != "_id").map((day) => (
+                                {Object.keys(data.openingHours || {}).filter(o => o !== "_id").map((day) => (
                                     <li key={day} className="flex justify-between text-sm">
                                         <span className="capitalize font-medium">{day}:</span>
-                                        <span>{data.openingHours[day].start} - {data.openingHours[day].to}</span>
+                                        {data.openingHours[day].open == "off" ? <span>Close</span> : <span>{data.openingHours[day].start} - {data.openingHours[day].to}</span>}
                                     </li>
                                 ))}
                             </ul>
@@ -109,19 +136,21 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                         <div>
                             <h3 className="text-2xl font-semibold mb-3 text-gray-900">Conditions</h3>
                             <ul className="list-disc list-inside space-y-2 text-gray-700">
-                                {data.conditions.map((condition, index) => (
+                                {data.conditions?.map((condition, index) => (
                                     <li key={index} className="text-sm">{condition}</li>
                                 ))}
                             </ul>
                         </div>
-                        <div className="mt-auto flex">
+                        <div className="mt-6 flex"> {/* เพิ่ม margin-top */}
                             {message && <MessageBox message={message} status={status} />}
                             {loading ? (
                                 <p>Loading...</p>
                             ) : (
                                 <>
                                     <ListFile _id={data.refID} />
-                                    <Button disabled={data.status !== "inactive"} className={data.status === "inactive" ? "mx-3 w-full bg-green-200" : "mx-3 w-full"} onClick={() => isActive(data)}>Active</Button>
+                                    {data.status == "inactive"
+                                        ? <Button className={"mx-3 w-full bg-green-200"} onClick={() => isActive(data)}>Active</Button>
+                                        : <Button className={"mx-3 w-full bg-red-200"} onClick={() => isInactiive(data)}>Inactiive</Button>}
                                 </>
                             )}
                         </div>
@@ -147,8 +176,8 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                         </>
                     )}
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

@@ -24,6 +24,9 @@ const RestaurantMenu = () => {
         </div>
       </div>
       <div className="sidebar">
+        <a className='cursor-pointer' onClick={() => window.history.back()}>
+          <span className="material-symbols-outlined">home</span><h3>Home</h3>
+        </a>
         <a className='cursor-pointer' href={`/`}>
           <span className="material-symbols-outlined">restaurant</span><h3>Restaurant</h3>
         </a>
