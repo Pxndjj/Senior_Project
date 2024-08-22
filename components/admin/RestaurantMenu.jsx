@@ -24,7 +24,7 @@ const RestaurantMenu = () => {
         </div>
       </div>
       <div className="sidebar">
-        <a className={pName.length > 20 ? 'active' : ''} href={`${bUrl}`}>
+        <a className='cursor-pointer' href={`/`}>
           <span className="material-symbols-outlined">restaurant</span><h3>Restaurant</h3>
         </a>
         <a className='cursor-pointer' onClick={() => signOut()}>

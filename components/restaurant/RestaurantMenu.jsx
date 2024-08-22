@@ -6,19 +6,13 @@ const RestaurantMenu = () => {
   const pathName = usePathname();
   const pName = pathName.split("/").pop();
   const bUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/restaurant/${params ? params.id : ""}`;
-  const clickClose = () => {
-    const sideMenu = document.querySelector('aside');
-    sideMenu.style.animation = "hideMenu 0.4s ease forwards";
-  }
+
   return (
     <aside>
       <div className="toggle">
         <div className="logo">
           <img src="/J.png" />
           <h2><span className="danger">Joyfulwait</span></h2>
-        </div>
-        <div onClick={clickClose} className="close">
-          <span className="material-symbols-outlined">close</span>
         </div>
       </div>
       <div className="sidebar">

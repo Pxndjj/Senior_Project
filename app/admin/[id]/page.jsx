@@ -112,9 +112,7 @@ const Admin = ({ params }) => {
                     <tr key={item._id} className="h-20 cursor-pointer hover:scale-95 transition-all" onClick={() => handleCardClick(item._id)}>
                       <td>
                         <div className="flex gap-4 items-center flex-1 w-full h-full">
-                          <img className="h-[32px] w-[30px] outline rounded-full"
-                            src="https://images.unsplash.com/photo-1717297808345-b740e9846158?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyfHx8ZW58MHx8fHx8"
-                          />
+                          <span className="material-symbols-outlined">storefront</span>
                           <div>{item.name}</div>
                         </div>
                       </td>
@@ -124,7 +122,11 @@ const Admin = ({ params }) => {
                           <Popover placement="bottom" showArrow={true}>
                             <PopoverTrigger>
                               <Button color="foreground">
-                                เปิด {currentHours.hours.start} {currentHours.day}.
+                                {
+                                  currentHours.hours.open === "off"
+                                    ? "ร้านปิด"
+                                    : `เปิด ${currentHours.hours.start} ${currentHours.day}.`
+                                }
                                 <div className="text-[10px] align-text-top font-bold">&#8595;</div>
                               </Button>
                             </PopoverTrigger>
@@ -133,7 +135,7 @@ const Admin = ({ params }) => {
                                 {Object.entries(item.openingHours).slice(0, -1).map(([day, hours]) => (
                                   <div className="flex justify-between" key={day}>
                                     <div className="w-24 capitalize">{day}</div>
-                                    <div>{hours.start} - {hours.to}</div>
+                                    {item.openingHours[day].open == "off" ? <span>ร้านปิด</span> : <span>{hours.start} - {hours.to}</span>}
                                   </div>
                                 ))}
                               </div>
