@@ -124,7 +124,7 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                                 {Object.keys(data.openingHours || {}).filter(o => o !== "_id").map((day) => (
                                     <li key={day} className="flex justify-between text-sm">
                                         <span className="capitalize font-medium">{day}:</span>
-                                        {data.openingHours[day].open == "off" ? <span>Close</span> : <span>{data.openingHours[day].start} - {data.openingHours[day].to}</span>}
+                                        {data.openingHours[day].open == "off" ? <span>Out Of Service</span> : <span>{data.openingHours[day].start} - {data.openingHours[day].to}</span>}
                                     </li>
                                 ))}
                             </ul>

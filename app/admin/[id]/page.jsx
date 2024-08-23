@@ -124,8 +124,8 @@ const Admin = ({ params }) => {
                               <Button color="foreground">
                                 {
                                   currentHours.hours.open === "off"
-                                    ? "ร้านปิด"
-                                    : `เปิด ${currentHours.hours.start} ${currentHours.day}.`
+                                    ? "Out Of Service"
+                                    : `Open ${currentHours.hours.start} ${currentHours.day}.`
                                 }
                                 <div className="text-[10px] align-text-top font-bold">&#8595;</div>
                               </Button>
@@ -135,7 +135,7 @@ const Admin = ({ params }) => {
                                 {Object.entries(item.openingHours).slice(0, -1).map(([day, hours]) => (
                                   <div className="flex justify-between" key={day}>
                                     <div className="w-24 capitalize">{day}</div>
-                                    {item.openingHours[day].open == "off" ? <span>ร้านปิด</span> : <span>{hours.start} - {hours.to}</span>}
+                                    {item.openingHours[day].open == "off" ? <span>Out Of Service</span> : <span>{hours.start} - {hours.to}</span>}
                                   </div>
                                 ))}
                               </div>

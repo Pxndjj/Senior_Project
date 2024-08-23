@@ -59,12 +59,18 @@ export default function Login() {
         });
         const data = await resModels.json();
 
-        router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/restaurant/${data.user.id}`);
+        if (data.user.role === 'restaurant') {
+          router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/restaurant/${data.user.id}`);
+        } else if (data.user.role === 'admin') {
+          router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/${data.user.id}`);
+        }
+        
       } else {
         setMessageInput("Please check your information is correct!");
       }
     }
   };
+
 
   const handleRegister = () => {
     router.push('/register');
@@ -124,7 +130,7 @@ export default function Login() {
                 variant="bordered" startContent={<Image src={logoGoogle} width={35} height={35} alt="123" />}>Continue with Google</Button>
             </div>
             <div className="mt-4 text-center">
-              <p className="w-full" style={{transition: "color 0.3s" }}>
+              <p className="w-full" style={{ transition: "color 0.3s" }}>
                 No account? <span className="cursor-pointer" onClick={handleRegister} style={{ color: "#1E90FF", transition: "color 0.3s" }}
                   onMouseEnter={(e) => e.target.style.color = "#104E8B"}
                   onMouseLeave={(e) => e.target.style.color = "#1E90FF"}>Register</span>

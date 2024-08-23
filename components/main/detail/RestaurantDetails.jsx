@@ -55,10 +55,11 @@ const RestaurantDetails = ({ data }) => {
             <div className="card-default">
                 <div className="bg-white rounded-xl overflow-hidden flex flex-col lg:flex-row">
                     <div className="relative lg:w-2/3 flex-shrink-0">
-                        <img
+                    <img
                             src={data.image}
                             alt="Restaurant Logo"
                             className="w-full h-full object-cover rounded-t-xl lg:rounded-tr-none lg:rounded-l-xl"
+                            style={{ maxHeight: '300%', minHeight: '300px', aspectRatio: '16/9' }}
                         />
                     </div>
 
@@ -85,13 +86,13 @@ const RestaurantDetails = ({ data }) => {
                         </div>
                         <div>
                             <h3 className="text-2xl font-semibold mb-3 text-gray-900">Condition</h3>
-                            <ul className="list-disc list-inside space-y-2 text-gray-700">
+                            <ul className="list-disc list-inside space-y-2 text-gray-700 ">
                                 {data.conditions.map((condition, index) => (
                                     <li key={index} className="text-sm">{condition}</li>
                                 ))}
                             </ul>
                         </div>
-                        <div className="mt-auto flex">
+                        <div className="mt-6 flex ">
                             <Booking restaurantID={data._id} />
                         </div>
                     </div>

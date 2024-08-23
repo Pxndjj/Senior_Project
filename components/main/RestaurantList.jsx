@@ -28,8 +28,8 @@ const RestaurantList = ({ restaurants }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {restaurants.filter(o => o.status === "active").map((restaurant, index) => (
         <div key={index} className="relative group cursor-pointer" onClick={() => handleCardClick(restaurant._id)}>
-          <Card className="py-2 bg-white shadow-md rounded-md overflow-hidden transition-transform duration-300 transform group-hover:scale-105 group-hover:shadow-lg">
-            <CardHeader className="pb-0 pt-1 px-2">
+          <Card className="h-full py-2 bg-white shadow-md rounded-md overflow-hidden transition-transform duration-300 transform group-hover:scale-105 group-hover:shadow-lg">
+            <CardHeader className="pb-0 pt-1 px-2 h-48">
               <img
                 style={{ height: "200px", width: "100%", objectFit: "cover" }}
                 className="rounded-md"

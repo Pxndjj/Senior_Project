@@ -30,9 +30,9 @@ const fetchRestaurants = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
       },
-      next: { revalidate: 60 }
+      cache: 'no-store',
     });
 
     if (!res.ok) {
@@ -40,12 +40,44 @@ const fetchRestaurants = async () => {
     }
 
     const data = await res.json();
-    return data.map(restaurant => ({
-      ...restaurant,
-      image: `${process.env.NEXT_PUBLIC_BACKEND}/storage/image/${restaurant._id + restaurant.logo}`,
-      position: [restaurant.latitude, restaurant.longitude],
-      text: restaurant.name
+
+    const restaurants = await Promise.all(data.map(async (restaurant) => {
+      try {
+        const resModels = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/review/all/${restaurant.refID}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+          },
+        });
+
+        const reviews = await resModels.json();
+
+        // คำนวณค่าเฉลี่ยของ rating
+        const averageRating = reviews.length > 0 ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length : 0;
+
+        return {
+          ...restaurant,
+          reviews, // เพิ่มรีวิวเข้าไปใน object ของ restaurant
+          averageRating: averageRating.toFixed(1), // เพิ่มค่าเฉลี่ยของ rating
+          image: `${process.env.NEXT_PUBLIC_BACKEND}/storage/image/${restaurant._id + restaurant.logo}`,
+          position: [restaurant.latitude, restaurant.longitude],
+          text: restaurant.name,
+        };
+      } catch (error) {
+        console.error(`Error fetching reviews for restaurant ${restaurant.name}:`, error);
+        return {
+          ...restaurant,
+          reviews: [],
+          averageRating: 0,
+          image: `${process.env.NEXT_PUBLIC_BACKEND}/storage/image/${restaurant._id + restaurant.logo}`,
+          position: [restaurant.latitude, restaurant.longitude],
+          text: restaurant.name,
+        };
+      }
     }));
+
+    return restaurants;
   } catch (error) {
     console.error('Error fetching data:', error);
     return [];
