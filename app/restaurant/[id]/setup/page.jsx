@@ -353,7 +353,7 @@ export default function Setup() {
                 <Input name="name" value={models.name} onChange={handleChangeData} key={"outside"} labelPlacement={"outside"} placeholder="enter your restaurant-name" variant="bordered" size={"sm"} type="text" label="Restaurant Name" className="custom-input" />
               </div>
               <div className="w-2/2 mt-[25px]">
-                <Input name="address" value={models.address} onChange={handleChangeData} key={"outside"} labelPlacement={"outside"} placeholder="enter your restaurant=address" variant="bordered" size={"sm"} type="text" label="Restaurant Address" className="custom-input" />
+                <Input name="address" value={models.address} onChange={handleChangeData} key={"outside"} labelPlacement={"outside"} placeholder="enter your restaurant-address" variant="bordered" size={"sm"} type="text" label="Restaurant Address" className="custom-input" />
               </div>
               <div className="flex mt-[5px]">
                 <Button className="bg-blue-100 border-1" onClick={fetchLocation} size={"sm"} startContent={<span className="material-symbols-outlined">person_pin_circle</span>}>Add Location</Button>

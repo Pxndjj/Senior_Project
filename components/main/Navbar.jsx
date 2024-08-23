@@ -84,7 +84,7 @@ const NavbarComponent = () => {
                     key="go-to-restaurant"
                     onClick={() => router.push(`/restaurant/${session?.user?.id}`)}
                   >
-                    Go To Restaurant
+                    Go to Restaurant
                   </DropdownItem>
                 ) : null}
                 {session?.user?.role === "admin" ? (
@@ -93,7 +93,7 @@ const NavbarComponent = () => {
                     key="go-to-restaurant"
                     onClick={() => router.push(`/admin/${session?.user?.id}`)}
                   >
-                    Go To admin
+                    Go to admin
                   </DropdownItem>
                 ) : null}
 

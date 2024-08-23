@@ -55,10 +55,11 @@ const RestaurantDetails = ({ data }) => {
             <div className="card-default">
                 <div className="bg-white rounded-xl overflow-hidden flex flex-col lg:flex-row">
                     <div className="relative lg:w-2/3 flex-shrink-0">
-                        <img
+                    <img
                             src={data.image}
                             alt="Restaurant Logo"
                             className="w-full h-full object-cover rounded-t-xl lg:rounded-tr-none lg:rounded-l-xl"
+                            style={{ maxHeight: '300%', minHeight: '300px', aspectRatio: '16/9' }}
                         />
                     </div>
 
