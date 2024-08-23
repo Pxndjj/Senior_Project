@@ -50,13 +50,23 @@ const AddQueue = ({ restaurantID }) => {
         party_size: true,
     });
 
-    const handleChangeData = (e) => {
-        const { name, value } = e.target;
+    const handlePartySizeInput = (e) => {
+        const value = e.target.value.replace(/[^0-9]/g, '');
+        setPartySize(value);
         setModelsAdd((prev) => ({
             ...prev,
-            [name]: value,
+            party_size: value,
         }));
     };
+
+    const handleCustomerNumberInput = (e) => {
+        const value = e.target.value.replace(/[^0-9]/g, '');
+        setModelsAdd((prev) => ({
+            ...prev,
+            customer_number: value,
+        }));
+    };
+
 
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState("");
@@ -153,11 +163,11 @@ const AddQueue = ({ restaurantID }) => {
                         <div className="flex flex-col gap-4 mb-4">
                             <Input
                                 value={partySize}
-                                onValueChange={setPartySize}
+                                onInput={handlePartySizeInput} 
                                 placeholder="Enter number"
                                 variant="bordered"
                                 size="md"
-                                type="text"
+                                type="text" 
                                 label="Party Size"
                                 className="custom-input"
                             />
@@ -165,12 +175,14 @@ const AddQueue = ({ restaurantID }) => {
                             <Input
                                 name="customer_number"
                                 value={modelAdd.customer_number}
-                                onChange={handleChangeData}
+                                onInput={handleCustomerNumberInput} 
                                 placeholder="Enter your contact number"
                                 variant="bordered"
                                 size="md"
+                                type="text"
                                 label="Contact Number"
                             />
+
                             {!dataError.customer_number && <span className="text-red-500 text-sm">Please enter your phone number.</span>}
 
                             <DatePicker
