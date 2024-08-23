@@ -27,16 +27,15 @@ export default function Queue() {
 
   const fetchData = async () => {
     try {
-      const resModels = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND}/queue/all/${params.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        }
-      );
+      const resModelrestaurant = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/restaurant/getRefID/${params.id}`);
+      const modelrestaurant = await resModelrestaurant.json();
+      const resModels = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/queue/all/${modelrestaurant._id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
 
       const data = await resModels.json();
       setModels(data);
@@ -86,8 +85,8 @@ export default function Queue() {
                 <DropdownMenu variant="faded" aria-label="Static Actions">
                   <DropdownItem startContent={<span className="material-symbols-outlined">select_all</span>} key="all" className="text-blue-300" onClick={() => setShowStatus("ALL")}>All Status</DropdownItem>
                   <DropdownItem startContent={<span className="material-symbols-outlined">check_circle</span>} key="confirm" className="text-green-300" onClick={() => setShowStatus("C")}>Confirm</DropdownItem>
-                  <DropdownItem startContent={<span className="material-symbols-outlined">cancel</span>} key="success" className="text-red-300" onClick={() => setShowStatus("X")}>Cancel</DropdownItem>
-                  <DropdownItem startContent={<span className="material-symbols-outlined">recommend</span>} key="cancel" className="text-gray-400" onClick={() => setShowStatus("S")}>Success</DropdownItem>
+                  <DropdownItem startContent={<span className="material-symbols-outlined">cancel</span>} key="succeed" className="text-red-300" onClick={() => setShowStatus("X")}>Cancel</DropdownItem>
+                  <DropdownItem startContent={<span className="material-symbols-outlined">recommend</span>} key="cancel" className="text-gray-400" onClick={() => setShowStatus("S")}>Succeed</DropdownItem>
                   <DropdownItem startContent={<span className="material-symbols-outlined">hourglass_top</span>} key="wait" className="text-orange-300" onClick={() => setShowStatus("W")}>Wait</DropdownItem>
                 </DropdownMenu>
               </Dropdown>

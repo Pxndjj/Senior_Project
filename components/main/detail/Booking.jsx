@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal, ModalFooter, ModalHeader, ModalContent, ModalBody, Input, DatePicker, RadioGroup, Radio, useDisclosure } from "@nextui-org/react";
-import { now, getLocalTimeZone, toCalendarDateTime } from "@internationalized/date";
+import { now, getLocalTimeZone, toCalendarDateTime, today } from "@internationalized/date";
 import { useSession } from "next-auth/react";
 import { cn } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
@@ -23,12 +23,23 @@ const CustomRadio = (props) => {
     );
 };
 
+const handleDateChange = (date) => {
+    const nowDateTime = toCalendarDateTime(now(getLocalTimeZone(), new Date() * 60000));
+    if (date < nowDateTime) {
+      setAlertMessage("Please select the correct date and time.");
+    } else {
+      setAlertMessage("");
+      setValueDateTime(date);
+    }
+  };
+
 const AddQueue = ({ restaurantID }) => {
     const router = useRouter();
     const { data: session } = useSession();
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [partySize, setPartySize] = useState("");
     const [valueDateTime, setValueDateTime] = useState(toCalendarDateTime(now(getLocalTimeZone(), new Date())));
+    const [alertMessage, setAlertMessage] = useState("");
     const [modelAdd, setModelsAdd] = useState({
         restaurant: "",
         refID: restaurantID,
@@ -49,6 +60,16 @@ const AddQueue = ({ restaurantID }) => {
         customer_number: true,
         party_size: true,
     });
+    
+    const handleDateChange = (date) => {
+        const nowDateTime = toCalendarDateTime(now(getLocalTimeZone(), new Date() * 60000));
+        if (date < nowDateTime) {
+          setAlertMessage("Please select the correct date and time.");
+        } else {
+          setAlertMessage("");
+          setValueDateTime(date);
+        }
+      };
 
     const handleChangeData = (e) => {
         const { name, value } = e.target;
@@ -173,16 +194,8 @@ const AddQueue = ({ restaurantID }) => {
                             />
                             {!dataError.customer_number && <span className="text-red-500 text-sm">Please enter your phone number.</span>}
 
-                            <DatePicker
-                                label="Booking Date"
-                                name="time_of_booking"
-                                value={valueDateTime}
-                                onChange={setValueDateTime}
-                                variant="bordered"
-                                hourCycle={24}
-                                placeholderValue={now("Asia/Bangkok")}
-                                showMonthAndYearPickers
-                            />
+                            <DatePicker label="Booking Date" name="time_of_booking" value={valueDateTime} onChange={handleDateChange} variant="bordered" hourCycle={24} placeholderValue={now("Asia/Bangkok")} showMonthAndYearPickers minValue={today(getLocalTimeZone())}
+                      defaultValue={today(getLocalTimeZone()).subtract({ days: 1 })} />
                         </div>
                     </ModalBody>
                     <ModalFooter>
