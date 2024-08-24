@@ -145,6 +145,12 @@ export default function Setup() {
     setModels(updatedModels);
   }
 
+  const deleteConditions = () => {
+    const updatedModels = { ...models };
+    updatedModels.conditions.pop()
+    setModels(updatedModels);
+  }
+
   const handleChangeData = (e) => {
     const { name, value } = e.target;
     setModels((prev) => ({
@@ -398,6 +404,7 @@ export default function Setup() {
                 ))}
               </div>
               <Button className="bg-orange-100 border-1" onClick={() => setAddConditions()} size={"sm"} startContent={<span className="material-symbols-outlined text-sm">add_circle</span>}>Add Conditions</Button>
+              <Button className="bg-red-100 border-1" onClick={() => deleteConditions()} size={"sm"} startContent={<span className="material-symbols-outlined text-sm">delete</span>}>Delete Conditions</Button>
               <p className="text-[12.5px] mx-1 mt-3">Restaurant Open</p>
 
               <div className="flex my-1">

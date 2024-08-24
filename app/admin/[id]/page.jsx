@@ -26,13 +26,13 @@ const api = {
 };
 
 const dayNames = {
-  sunday: "อาทิตย์",
-  monday: "จันทร์",
-  tuesday: "อังคาร",
-  wednesday: "พุธ",
-  thursday: "พฤหัสบดี",
-  friday: "ศุกร์",
-  saturday: "เสาร์",
+  sunday: "sunday",
+  monday: "monday",
+  tuesday: "tuesday",
+  wednesday: "wednesday",
+  thursday: "thursday",
+  friday: "friday",
+  saturday: "saturday",
 };
 
 const Admin = ({ params }) => {
