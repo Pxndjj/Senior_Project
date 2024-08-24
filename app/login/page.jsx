@@ -63,6 +63,8 @@ export default function Login() {
 
         if (data.user.role === 'restaurant') {
           router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/restaurant/${data.user.id}`);
+        } else if (data.user.role === 'user') {
+          router.push('/');
         } else if (data.user.role === 'admin') {
           router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/${data.user.id}`);
         }
