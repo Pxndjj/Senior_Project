@@ -112,17 +112,18 @@ const NavbarComponent = () => {
           <div className="flex space-x-4">
             <button
               onClick={() => router.push("/login")}
-              className="border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded-full hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
+              className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
             >
               Login
             </button>
             <button
               onClick={() => router.push("/register")}
-              className="border border-blue-500 text-blue-500 font-semibold py-2 px-4 rounded-full hover:bg-blue-500 hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
+              className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
             >
               Register
             </button>
           </div>
+
         )}
       </NavbarContent>
     </Navbar>
