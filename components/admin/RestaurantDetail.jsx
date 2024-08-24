@@ -14,8 +14,6 @@ const backgroundStyle = (path) => {
     }
 }
 
-
-
 const RestaurantDetails = ({ data, onRefresh }) => {
 
     // ตรวจสอบว่า data.recommendedMenu เป็นอาร์เรย์หรือไม่
@@ -46,9 +44,9 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                 body: formData
             });
             if (res.ok) {
-                showMessage("Active succeeded!", "success")
+                showMessage("Active succeeded!", "success");
                 setTimeout(() => {
-                    setLoading(false)
+                    setLoading(false);
                 }, 3000);
                 if (onRefresh) {
                     onRefresh();
@@ -72,9 +70,35 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                 body: formData
             });
             if (res.ok) {
-                showMessage("Inactive succeeded!", "success")
+                showMessage("Inactive succeeded!", "success");
                 setTimeout(() => {
-                    setLoading(false)
+                    setLoading(false);
+                }, 3000);
+                if (onRefresh) {
+                    onRefresh();
+                }
+            }
+
+        } catch (error) {
+            console.error('Error uploading file: ', error);
+        }
+    }
+
+    const reject = async (item) => {
+        item.status = "reject";
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('modelData', JSON.stringify(item));
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/restaurant/update`, {
+                method: 'POST',
+                body: formData
+            });
+            if (res.ok) {
+                showMessage("Reject succeeded!", "success");
+                setTimeout(() => {
+                    setLoading(false);
                 }, 3000);
                 if (onRefresh) {
                     onRefresh();
@@ -99,6 +123,7 @@ const RestaurantDetails = ({ data, onRefresh }) => {
             carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
         }
     };
+
     return (
         <div>
             <div className="container mx-auto p-6 lg:p-12">
@@ -124,7 +149,7 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                                 {Object.keys(data.openingHours || {}).filter(o => o !== "_id").map((day) => (
                                     <li key={day} className="flex justify-between text-sm">
                                         <span className="capitalize font-medium">{day}:</span>
-                                        {data.openingHours[day].open == "off" ? <span>Out Of Service</span> : <span>{data.openingHours[day].start} - {data.openingHours[day].to}</span>}
+                                        {data.openingHours[day].open === "off" ? <span>Out Of Service</span> : <span>{data.openingHours[day].start} - {data.openingHours[day].to}</span>}
                                     </li>
                                 ))}
                             </ul>
@@ -141,20 +166,22 @@ const RestaurantDetails = ({ data, onRefresh }) => {
                                 ))}
                             </ul>
                         </div>
-                        <div className="mt-6 flex"> {/* เพิ่ม margin-top */}
+                        <div className="mt-6 flex flex-col space-y-3">
                             {message && <MessageBox message={message} status={status} />}
                             {loading ? (
                                 <p>Loading...</p>
                             ) : (
                                 <>
                                     <ListFile _id={data.refID} />
-                                    {data.status == "inactive"
-                                        ? <Button className={"mx-3 w-full bg-green-200"} onClick={() => isActive(data)}>Active</Button>
-                                        : <Button className={"mx-3 w-full bg-red-200"} onClick={() => isInactiive(data)}>Inactiive</Button>}
+                                    {data.status === "inactive" ? (
+                                        <Button className={"mx-3 w-full bg-green-200"} onClick={() => isActive(data)}>Active</Button>
+                                    ) : (
+                                        <Button className={"mx-3 w-full bg-yellow-200"} onClick={() => isInactiive(data)}>Inactive</Button>
+                                    )}
+                                    <Button className={"mx-3 w-full bg-red-200"} onClick={() => reject(data)}>Reject</Button>
                                 </>
                             )}
                         </div>
-
                     </div>
                 </div>
 

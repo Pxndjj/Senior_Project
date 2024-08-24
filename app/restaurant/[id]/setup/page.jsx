@@ -273,7 +273,17 @@ export default function Setup() {
     <main className="main-content mt-1 card-standard">
       {message && <MessageBox message={message} status={status} />}
       <div className="flex justify-between pb-5">
-        <h2>Restaurant/Setup {models.status === "inactive" ? <span className="text-warning-400">{models.status}</span> : <span className="text-green-400">{models.status}</span>}</h2>
+        <h2>
+          Restaurant/Setup{" "}
+          {models.status === "inactive" ? (
+            <span className="text-yellow-400">{models.status}</span>
+          ) : models.status === "reject" ? (
+            <span className="text-red-400">{models.status}</span>
+          ) : (
+            <span className="text-green-400">{models.status}</span>
+          )}
+        </h2>
+
         <div className="text-right">
           {
             actionEdit ?

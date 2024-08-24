@@ -37,28 +37,33 @@ const dayNames = {
 
 const Admin = ({ params }) => {
   const [restaurant, setRestaurant] = useState([]);
-  const [countUser, SetCountUser] = useState(0);
-  const [countRestaurant, SetCountRestaurant] = useState(0);
+  const [SetCountUser] = useState(0);
+  const [SetCountRestaurant] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [restaurantsPerPage] = useState(8);
 
   useEffect(() => {
     (async () => {
-      let _restaurant = await api.getRestaurant();
-      let countRestaurant = await api.countRestaurant();
-      let countUser = await api.countUser();
-
-      _restaurant.sort((a, b) => {
-        if (a.status === 'inactive' && b.status === 'active') return -1;
-        if (a.status === 'active' && b.status === 'inactive') return 1;
-        return 0;
-      });
-
-      setRestaurant(_restaurant);
-      SetCountUser(countUser);
-      SetCountRestaurant(countRestaurant);
+      try {
+        let _restaurant = await api.getRestaurant();
+        let countRestaurant = await api.countRestaurant();
+        let countUser = await api.countUser();
+  
+        _restaurant.sort((a, b) => {
+          if (a.status === 'inactive' && b.status === 'active') return -1;
+          if (a.status === 'active' && b.status === 'inactive') return 1;
+          return 0;
+        });
+  
+        setRestaurant(_restaurant);
+        setCountUser(countUser);  // Corrected function name
+        setCountRestaurant(countRestaurant);  // Corrected function name
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     })();
   }, []);
+  
 
   const indexOfLastRestaurant = currentPage * restaurantsPerPage;
   const indexOfFirstRestaurant = indexOfLastRestaurant - restaurantsPerPage;
@@ -145,7 +150,7 @@ const Admin = ({ params }) => {
                       </td>
                       <td>
                         <div className="flex justify-center">
-                          <div className={`${(item.status === "active" && "bg-[#00B69B]") || (item.status === "waiting" && "bg-[#FD5454]") || (item.status === "inactive" && "bg-[#FCBE2D]")} text-white rounded-full py-1 w-[80%]`}>
+                          <div className={`${(item.status === "active" && "bg-[#00B69B]") || (item.status === "reject" && "bg-[#FD5454]") || (item.status === "inactive" && "bg-[#FCBE2D]")} text-white rounded-full py-1 w-[80%]`}>
                             {item.status}
                           </div>
                         </div>
