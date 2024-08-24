@@ -5,34 +5,6 @@ import { useSession } from "next-auth/react";
 import { cn } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
-const CustomRadio = (props) => {
-    const { children, ...otherProps } = props;
-    return (
-        <Radio
-            {...otherProps}
-            classNames={{
-                base: cn(
-                    "group inline-flex items-center hover:opacity-70 active:opacity-50 justify-between flex-row-reverse tap-highlight-transparent",
-                    "cursor-pointer border-2 border-default rounded-lg gap-4 p-2 m-auto",
-                    "data-[selected=true]:border-primary",
-                ),
-            }}
-        >
-            {children}
-        </Radio>
-    );
-};
-
-const handleDateChange = (date) => {
-    const nowDateTime = toCalendarDateTime(now(getLocalTimeZone(), new Date() * 60000));
-    if (date < nowDateTime) {
-      setAlertMessage("Please select the correct date and time.");
-    } else {
-      setAlertMessage("");
-      setValueDateTime(date);
-    }
-  };
-
 const AddQueue = ({ restaurantID }) => {
     const router = useRouter();
     const { data: session } = useSession();
@@ -40,6 +12,8 @@ const AddQueue = ({ restaurantID }) => {
     const [partySize, setPartySize] = useState("");
     const [valueDateTime, setValueDateTime] = useState(toCalendarDateTime(now(getLocalTimeZone(), new Date())));
     const [alertMessage, setAlertMessage] = useState("");
+    const [successModalOpen, setSuccessModalOpen] = useState(false); // State for success modal
+
     const [modelAdd, setModelsAdd] = useState({
         restaurant: "",
         refID: restaurantID,
@@ -88,24 +62,11 @@ const AddQueue = ({ restaurantID }) => {
         }));
     };
 
-
-    const [message, setMessage] = useState("");
-    const [status, setStatus] = useState("");
-
-    const showMessage = (msg, statusType) => {
-        setMessage(msg);
-        setStatus(statusType);
-        setTimeout(() => {
-            setMessage("");
-            setStatus("");
-        }, 3000);
-    };
-
     const saveQueue = async () => {
         modelAdd.time_of_booking = valueDateTime;
         modelAdd.party_size = partySize;
 
-        modelAdd.customer_name = session?.user?.name
+        modelAdd.customer_name = session?.user?.name;
 
         const check = { customer_name: modelAdd.customer_name !== "", customer_number: modelAdd.customer_number !== "", party_size: modelAdd.party_size !== "" };
         setDataError(check);
@@ -122,7 +83,8 @@ const AddQueue = ({ restaurantID }) => {
         });
 
         if (res.ok) {
-            showMessage("Operation succeeded!", "success")
+            setSuccessModalOpen(true); // Open success modal
+
             setModelsAdd({
                 restaurant: "",
                 refID: restaurantID,
@@ -139,6 +101,9 @@ const AddQueue = ({ restaurantID }) => {
             });
 
             onOpenChange(false);
+        } else {
+            // Handle the error case
+            alert("Booking failed. Please try again.");
         }
     };
 
@@ -220,6 +185,30 @@ const AddQueue = ({ restaurantID }) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
+            
+            {/* Success Modal */}
+            <Modal
+                isOpen={successModalOpen}
+                onOpenChange={setSuccessModalOpen}
+                backdrop={"blur"}
+                isDismissable={false}
+                isKeyboardDismissDisabled={true}
+            >
+                <ModalContent>
+                    <ModalHeader className="flex flex-col gap-1">Booking Successful</ModalHeader>
+                    <ModalBody>
+                        <div className="flex flex-col gap-4 mb-4">
+                            <p>Your booking has been successfully added to the queue!</p>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onPress={() => setSuccessModalOpen(false)}>
+                            Done
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+            
             <Button className="mx-3 w-full" onClick={checkLogin}>Booking</Button>
         </>
     );
