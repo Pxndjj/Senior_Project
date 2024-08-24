@@ -233,28 +233,37 @@ export default function Setup() {
       return;
     }
 
+    // Ensure the file is a PDF
+    if (file.type !== "application/pdf") {
+      console.error('Invalid file type. Please upload a PDF file.');
+      showMessage("Invalid file type. Please upload a PDF file.", "error");
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('id', params.id);
-    const formDataObj = {};
-    formData.forEach((value, key) => {
-      formDataObj[key] = value;
-    });
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/uploadfile/upload`, {
         method: 'POST',
-        body: formData
+        body: formData,
       });
+
       if (res.ok) {
-        showMessage("upload succeeded!", "success")
+        showMessage("Upload succeeded!", "success");
         fetchFile();
         setActionEdit(true);
+      } else {
+        console.error('Upload failed.');
+        showMessage("Upload failed.", "error");
       }
     } catch (error) {
       console.error('Error uploading file: ', error);
+      showMessage("Error uploading file.", "error");
     }
   };
+
 
   const imageStyle = {
     height: "340px",
@@ -273,7 +282,12 @@ export default function Setup() {
                   <label className="relative cursor-pointer hover:bg-gray-500 bg-blue-300 text-gray-700 hover:text-white font-semibold py-2 px-4 rounded-2xl flex items-center">
                     <span className="material-symbols-outlined">upload_file</span>
                     <span className="text-base">Upload File</span>
-                    <input type="file" className="absolute hidden" onChange={upload} />
+                    <input
+                      type="file"
+                      accept="application/pdf" // Accept only PDF files
+                      className="absolute hidden"
+                      onChange={upload}
+                    />
                   </label>
                   <label className="mx-5 relative cursor-pointer hover:bg-gray-500 bg-gray-300 text-gray-700 hover:text-white font-semibold py-2 px-4 rounded-2xl flex items-center">
                     <span className="material-symbols-outlined mr-2 text-sm">edit</span>
@@ -281,6 +295,7 @@ export default function Setup() {
                     <input className="absolute hidden" onClick={() => setActionEdit(false)} />
                   </label>
                 </div>
+
               </>
               :
               <div className="flex items-end justify-end ">
@@ -532,7 +547,13 @@ export default function Setup() {
           )}
         </div>
         <div className="w-[40%] ml-10 card-default">
-          <h1>upload</h1>
+          <h1>Upload</h1>
+          <p className="text-red-500 text-sm mb-2">Only PDF files are allowed for upload.</p> {/* Warning message */}
+          <p className="text-gray-700 text-sm mb-4">Please upload the following files:</p>
+          <ul className="list-disc list-inside text-gray-700 text-sm mb-4">
+            <li>PDF of your ID card</li>
+            <li>PDF of the business license</li>
+          </ul> {/* Note about required files */}
           <>
             {loading ? (
               <p>Loading...</p>
@@ -549,7 +570,6 @@ export default function Setup() {
                       classNames={{
                         base: "max-h-[190px]",
                         table: "min-h-[150px]",
-
                       }}
                     >
                       <TableHeader>
@@ -567,7 +587,6 @@ export default function Setup() {
                             </TableCell>
                           </TableRow>
                         ))}
-
                       </TableBody>
                     </Table>
 
@@ -581,8 +600,7 @@ export default function Setup() {
                       </div>
                     )}
                   </>
-                )
-                }
+                )}
               </div>
             )}
           </>
