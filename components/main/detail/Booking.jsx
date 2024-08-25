@@ -34,16 +34,16 @@ const AddQueue = ({ restaurantID }) => {
         customer_number: true,
         party_size: true,
     });
-    
+
     const handleDateChange = (date) => {
         const nowDateTime = toCalendarDateTime(now(getLocalTimeZone(), new Date() * 60000));
         if (date < nowDateTime) {
-          setAlertMessage("Please select the correct date and time.");
+            setAlertMessage("Please select the correct date and time.");
         } else {
-          setAlertMessage("");
-          setValueDateTime(date);
+            setAlertMessage("");
+            setValueDateTime(date);
         }
-      };
+    };
 
     const handlePartySizeInput = (e) => {
         const value = e.target.value.replace(/[^0-9]/g, '');
@@ -149,19 +149,19 @@ const AddQueue = ({ restaurantID }) => {
                         <div className="flex flex-col gap-4 mb-4">
                             <Input
                                 value={partySize}
-                                onInput={handlePartySizeInput} 
+                                onInput={handlePartySizeInput}
                                 placeholder="Enter number"
                                 variant="bordered"
                                 size="md"
-                                type="text" 
+                                type="text"
                                 label="Party Size"
                                 className="custom-input"
                             />
-
+                            {!dataError.party_size && <span className="text-red-500 text-sm">Please enter your party size.</span>}
                             <Input
                                 name="customer_number"
                                 value={modelAdd.customer_number}
-                                onInput={handleCustomerNumberInput} 
+                                onInput={handleCustomerNumberInput}
                                 placeholder="Enter your contact number"
                                 variant="bordered"
                                 size="md"
@@ -172,7 +172,7 @@ const AddQueue = ({ restaurantID }) => {
                             {!dataError.customer_number && <span className="text-red-500 text-sm">Please enter your phone number.</span>}
 
                             <DatePicker label="Booking Date" name="time_of_booking" value={valueDateTime} onChange={handleDateChange} variant="bordered" hourCycle={24} placeholderValue={now("Asia/Bangkok")} showMonthAndYearPickers minValue={today(getLocalTimeZone())}
-                      defaultValue={today(getLocalTimeZone()).subtract({ days: 1 })} />
+                                defaultValue={today(getLocalTimeZone()).subtract({ days: 1 })} />
                         </div>
                     </ModalBody>
                     <ModalFooter>
@@ -185,7 +185,7 @@ const AddQueue = ({ restaurantID }) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            
+
             {/* Success Modal */}
             <Modal
                 isOpen={successModalOpen}
@@ -208,7 +208,7 @@ const AddQueue = ({ restaurantID }) => {
                     </ModalFooter>
                 </ModalContent>
             </Modal>
-            
+
             <Button className="mx-3 w-full" onClick={checkLogin}>Booking</Button>
         </>
     );
