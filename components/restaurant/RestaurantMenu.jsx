@@ -20,7 +20,7 @@ const RestaurantMenu = () => {
           <span className="material-symbols-outlined">dashboard</span><h3>Dashboard</h3>
         </a>
         <a className={pName === 'queue' ? 'active' : ''} href={`${bUrl}/queue`}>
-          <span className="material-symbols-outlined">thumbs_up_down</span><h3>Queue</h3>
+          <span className="material-symbols-outlined">add_circle</span><h3>Queue</h3>
         </a>                         
         <a className={pName === 'setup' ? 'active' : ''} href={`${bUrl}/setup`}>
           <span className="material-symbols-outlined">manufacturing</span><h3>Setting Page</h3>
