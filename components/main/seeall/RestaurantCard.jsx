@@ -27,7 +27,7 @@ const RestaurantCard = ({ restaurant }) => {
     };
 
     const [selectedKeys, setSelectedKeys] = useState(new Set(["ALL"]));
-    const [selectedDay, setSelectedDay] = useState(new Set(["Monday"]));
+    const [selectedDay, setSelectedDay] = useState(new Set(["All Days"]));
     const [searchTerm, setSearchTerm] = useState("");
 
     const selectedValue = useMemo(
@@ -43,13 +43,11 @@ const RestaurantCard = ({ restaurant }) => {
 
     const filteredRestaurants = useMemo(() => {
         return restaurant.filter((restaurant) => {
-
             const matchesName = restaurant.name.toLowerCase().includes(searchTerm.toLowerCase());
-
             const dayInfo = restaurant.openingHours[selectedDayValue.toLowerCase()];
-            const matchesDay = dayInfo && dayInfo.open.toLowerCase() === "on";
-            const matchesRating = selectedValue === "ALL" || Number(restaurant.averageRating) >= Number(selectedValue);
-
+            const matchesDay =
+                selectedDayValue === "All Days" || (dayInfo && dayInfo.open.toLowerCase() === "on");
+            const matchesRating = selectedValue === "ALL" || Number(restaurant.averageRating) == Number(selectedValue);
             return matchesName && matchesDay && matchesRating;
         });
     }, [restaurant, searchTerm, selectedDayValue, selectedValue]);
@@ -105,6 +103,7 @@ const RestaurantCard = ({ restaurant }) => {
                         onSelectionChange={setSelectedDay}
                     >
                         {/* ตัวเลือกวันในสัปดาห์ */}
+                        <DropdownItem key="All Days">All Days</DropdownItem>
                         <DropdownItem key="Monday">Monday</DropdownItem>
                         <DropdownItem key="Tuesday">Tuesday</DropdownItem>
                         <DropdownItem key="Wednesday">Wednesday</DropdownItem>

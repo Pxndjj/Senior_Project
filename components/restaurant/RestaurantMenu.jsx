@@ -9,10 +9,9 @@ const RestaurantMenu = () => {
 
   return (
     <aside>
-      <div className="toggle">
-        <div className="logo">
-          <img src="/J.png" />
-          <h2><span className="danger">Joyfulwait</span></h2>
+      <div class="toggle transform transition-transform duration-300 hover:scale-110">
+        <div class="logo flex items-center">
+          <h2 class="text-2xl ml-4"><span class="text-red-500">Joyfulwait</span></h2>
         </div>
       </div>
       <div className="sidebar">
@@ -21,7 +20,7 @@ const RestaurantMenu = () => {
         </a>
         <a className={pName === 'queue' ? 'active' : ''} href={`${bUrl}/queue`}>
           <span className="material-symbols-outlined">add_circle</span><h3>Queue</h3>
-        </a>                         
+        </a>
         <a className={pName === 'setup' ? 'active' : ''} href={`${bUrl}/setup`}>
           <span className="material-symbols-outlined">manufacturing</span><h3>Setting Page</h3>
         </a>
@@ -29,7 +28,7 @@ const RestaurantMenu = () => {
           <span className="material-symbols-outlined">gallery_thumbnail</span><h3>Gallery</h3>
         </a>
         <a className='cursor-pointer' href={`/`}>
-        <span className="material-symbols-outlined">storefront</span><h3>Restaurants</h3>
+          <span className="material-symbols-outlined">storefront</span><h3>Restaurants</h3>
         </a>
         <a className='cursor-pointer' onClick={() => signOut()}>
           <span className="material-symbols-outlined">logout</span><h3>Logout</h3>

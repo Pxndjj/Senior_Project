@@ -15,13 +15,9 @@ const RestaurantMenu = () => {
   }
   return (
     <aside>
-      <div className="toggle">
-        <div className="logo">
-          <img src="/images/next.svg" />
-          <h2><span className="danger">RS</span></h2>
-        </div>
-        <div onClick={clickClose} className="close">
-          <span className="material-symbols-outlined">close</span>
+      <div class="toggle transform transition-transform duration-300 hover:scale-110">
+        <div class="logo flex items-center">
+          <h2 class="text-2xl ml-4"><span class="text-red-500">Joyfulwait</span></h2>
         </div>
       </div>
       <div className="sidebar">
