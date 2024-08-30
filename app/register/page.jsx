@@ -22,8 +22,11 @@ export default function Register() {
         userImage: "default",
         userStatus: "W",
     });
-    const [error, setError] = useState("");
-    const [registerError, setRegisterError] = useState("");
+
+    const [registerError, setRegisterError] = useState({
+        fieldErrors: {},  // For individual field validation errors
+        generalError: "", // For general errors like registration failure
+    });
 
     const api = {
         checkUserRegister: async (objCredentials) => {
@@ -45,49 +48,116 @@ export default function Register() {
         },
     };
 
-    //state emit update
+    // Handle input changes and validation
     const handleChange = (e) => {
         const { name, value } = e.target;
+
+        let error = "";
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\d{10}$/;
+
+        if (name === "userEmail") {
+            if (!emailRegex.test(value)) {
+                error = "Please enter a valid email address.";
+            }
+        } else if (name === "userPhone") {
+            if (!phoneRegex.test(value)) {
+                error = "Please enter a valid 10-digit phone number.";
+            }
+        } else if (name === "userName" && value.trim() === "") {
+            error = "User Name cannot be empty.";
+        } else if (name === "userPass" && value.trim() === "") {
+            error = "Password cannot be empty.";
+        }
+
+        setRegisterError((prev) => ({
+            ...prev,
+            fieldErrors: {
+                ...prev.fieldErrors,
+                [name]: error,
+            },
+            generalError: "", // Clear any general error when user starts typing
+        }));
+
         setCredentials((prev) => ({
             ...prev,
             [name]: value,
         }));
-        console.log(value)
     };
-    //state event
+
+    // Handle form submission
     const handleRegister = async (e) => {
         e.preventDefault();
-        if (
-            !credentials.userEmail ||
-            !credentials.userName ||
-            !credentials.userPass ||
-            !credentials.userPhone
 
-        ) {
-            console.log("Please fill out all the fields completely!!!")
-            setRegisterError("Please fill out all the fields completely!!!");
+        // Perform a final validation check on all fields
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\d{10}$/;
+
+        let fieldErrors = {};
+
+        if (!credentials.userName.trim()) {
+            fieldErrors.userName = "User Name cannot be empty.";
+        }
+
+        if (!phoneRegex.test(credentials.userPhone)) {
+            fieldErrors.userPhone = "Please enter a valid 10-digit phone number.";
+        }
+
+        if (!emailRegex.test(credentials.userEmail)) {
+            fieldErrors.userEmail = "Please enter a valid email address.";
+        }
+
+        if (!credentials.userPass.trim()) {
+            fieldErrors.userPass = "Password cannot be empty.";
+        }
+
+        // Update the state with any field errors
+        setRegisterError((prev) => ({
+            ...prev,
+            fieldErrors: fieldErrors,
+            generalError: "", // Clear any general error
+        }));
+
+        // If there are any field errors, stop the submission
+        if (Object.keys(fieldErrors).length > 0) {
+            setRegisterError((prev) => ({
+                ...prev,
+                generalError: "Please correct the highlighted errors before proceeding.",
+            }));
             return;
         }
+
         try {
             const checkUser = await api.checkUserRegister(credentials);
-            if (checkUser && checkUser.userPhone == credentials.userPhone) {
-                console.log("This phone has already been used.")
-                setRegisterError("This phone has already been used.");
+            if (checkUser && checkUser.userPhone === credentials.userPhone) {
+                setRegisterError((prev) => ({
+                    ...prev,
+                    generalError: "This phone has already been used.",
+                }));
                 return;
             }
-            if (checkUser && checkUser.userEmail == credentials.userEmail) {
-                console.log("This email has already been used.")
-                setRegisterError("This email has already been used.");
+            if (checkUser && checkUser.userEmail === credentials.userEmail) {
+                setRegisterError((prev) => ({
+                    ...prev,
+                    generalError: "This email has already been used.",
+                }));
                 return;
             }
+
             const res = await api.register(credentials);
             if (res.ok) {
                 await signIn("credentials", credentials);
             } else {
-                alert("Register unsuccessful");
+                setRegisterError((prev) => ({
+                    ...prev,
+                    generalError: "Registration unsuccessful. Please try again.",
+                }));
             }
         } catch (error) {
-            console.log(error);
+            setRegisterError((prev) => ({
+                ...prev,
+                generalError: "An error occurred during registration. Please try again later.",
+            }));
         }
     };
 
@@ -100,12 +170,13 @@ export default function Register() {
             <div>
                 <Image
                     src={
-                        session.userImage == "default"
+                        session.userImage === "default"
                             ? userImage
                             : session.userImage
                     }
                     width={50}
                     height={100}
+                    alt="User Image"
                 />
                 <p>Welcome {session.userName}. Signed In As</p>
                 <p>{session.userEmail}</p>
@@ -149,7 +220,19 @@ export default function Register() {
                                 <h1 className="font-bold text-2xl">Create an Account </h1>
                             </div>
                             <div className="my-3">
-                                <Input type="text" name="userName" value={credentials.userName} onChange={handleChange} label="User Name" variant="bordered" placeholder="name" className="m-auto" />
+                                <Input 
+                                    type="text" 
+                                    name="userName" 
+                                    value={credentials.userName} 
+                                    onChange={handleChange} 
+                                    label="User Name" 
+                                    variant="bordered" 
+                                    placeholder="name" 
+                                    className="m-auto" 
+                                />
+                                {registerError.fieldErrors.userName && (
+                                    <p className="text-red-500 text-xs">{registerError.fieldErrors.userName}</p>
+                                )}
                             </div>
                             <div className="my-3">
                                 <Input
@@ -163,17 +246,45 @@ export default function Register() {
                                     className="m-auto"
                                     inputMode="numeric"
                                     pattern="[0-9]*"
-                                    errorMessage="Please enter only number"
                                 />
+                                {registerError.fieldErrors.userPhone && (
+                                    <p className="text-red-500 text-xs">{registerError.fieldErrors.userPhone}</p>
+                                )}
                             </div>
                             <div className="my-3">
-                                <Input type="email" name="userEmail" value={credentials.userEmail} onChange={handleChange} label="E-mail" variant="bordered" placeholder="@gmail.com" className="m-auto" />
+                                <Input 
+                                    type="email" 
+                                    name="userEmail" 
+                                    value={credentials.userEmail} 
+                                    onChange={handleChange} 
+                                    label="E-mail" 
+                                    variant="bordered" 
+                                    placeholder="@gmail.com" 
+                                    className="m-auto" 
+                                />
+                                {registerError.fieldErrors.userEmail && (
+                                    <p className="text-red-500 text-xs">{registerError.fieldErrors.userEmail}</p>
+                                )}
                             </div>
                             <div className="my-3">
-                                <Input type="password" name="userPass" value={credentials.userPass} onChange={handleChange} label="Password" variant="bordered" placeholder="password" className="m-auto" />
+                                <Input 
+                                    type="password" 
+                                    name="userPass" 
+                                    value={credentials.userPass} 
+                                    onChange={handleChange} 
+                                    label="Password" 
+                                    variant="bordered" 
+                                    placeholder="password" 
+                                    className="m-auto" 
+                                />
+                                {registerError.fieldErrors.userPass && (
+                                    <p className="text-red-500 text-xs">{registerError.fieldErrors.userPass}</p>
+                                )}
                             </div>
                             <div className="my-3">
-                                <p className="text-red-500 w-full text-sm">{registerError}</p>
+                                {registerError.generalError && (
+                                    <p className="text-red-500 w-full text-sm">{registerError.generalError}</p>
+                                )}
                             </div>
                             <div className="my-3">
                                 <Button className="w-full" type="submit">GET STARTED</Button>
@@ -185,7 +296,7 @@ export default function Register() {
                             <div className="w-2/4"><h2 className="w-full text-center border-b leading-3 mt-3"></h2></div>
                         </div>
                         <div className="mt-4 text-center">
-                            <Button className="w-full" onClick={() => { signIn("google"); }} variant="bordered" startContent={<Image src={imgeGoogle} width={35} height={35} alt="123" />}>Continue with Google</Button>
+                            <Button className="w-full" onClick={() => { signIn("google"); }} variant="bordered" startContent={<Image src={imgeGoogle} width={35} height={35} alt="Google" />}>Continue with Google</Button>
                         </div>
                         <div className="mt-4 text-center">
                             <p className="w-full" style={{ transition: "color 0.3s" }}>
