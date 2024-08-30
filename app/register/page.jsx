@@ -55,6 +55,7 @@ export default function Register() {
         let error = "";
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^\d{10}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
         if (name === "userEmail") {
             if (!emailRegex.test(value)) {
@@ -66,8 +67,10 @@ export default function Register() {
             }
         } else if (name === "userName" && value.trim() === "") {
             error = "User Name cannot be empty.";
-        } else if (name === "userPass" && value.trim() === "") {
-            error = "Password cannot be empty.";
+        } else if (name === "userPass") {
+            if (!passwordRegex.test(value)) {
+                error = "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a digit, and a special character.";
+            }
         }
 
         setRegisterError((prev) => ({
@@ -92,6 +95,7 @@ export default function Register() {
         // Perform a final validation check on all fields
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const phoneRegex = /^\d{10}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
         let fieldErrors = {};
 
@@ -107,8 +111,8 @@ export default function Register() {
             fieldErrors.userEmail = "Please enter a valid email address.";
         }
 
-        if (!credentials.userPass.trim()) {
-            fieldErrors.userPass = "Password cannot be empty.";
+        if (!passwordRegex.test(credentials.userPass)) {
+            fieldErrors.userPass = "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a digit, and a special character.";
         }
 
         // Update the state with any field errors
