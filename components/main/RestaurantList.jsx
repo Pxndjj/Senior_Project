@@ -28,7 +28,7 @@ const RestaurantList = ({ restaurants }) => {
       </div>
     );
   };
-
+  // const sortedRestaurants = restaurants
   return (
     <div>
       <div className="flex justify-between items-center mb-8 relative">
@@ -49,8 +49,9 @@ const RestaurantList = ({ restaurants }) => {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
         {restaurants
-          .filter((o) => (o.status === "active" && o.averageRating >= 5) || (o.status === "active"))
-          .slice(0, 10)
+          .sort((a, b) => parseFloat(b.averageRating) - parseFloat(a.averageRating))
+          .slice(0, 10) // ใช้ slice เพื่อเลือกเฉพาะ 10 ร้านที่มีค่า averageRating สูงสุด
+        
           .map((restaurant, index) => (
             <div
               key={index}
