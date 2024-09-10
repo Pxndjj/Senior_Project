@@ -66,8 +66,6 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-xl font-semibold mb-4 ml-6">{restaurants.length} restaurants available</h2>
-
       <RestaurantCard restaurant={restaurants} />
     </div>
   );

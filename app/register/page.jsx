@@ -189,27 +189,31 @@ export default function Register() {
         );
     }
 
+    const goHome = () => {
+        router.push('/');
+      };
+
     return (
         <div className="bg-image-default h-screen flex justify-center items-end">
             <div className="flex gap-6 w-[70%] h-[85%] text-white">
                 {/* left */}
-                <div id="left" className="flex-1">
-                    <div className="flex flex-col justify-between h-[60%] ">
-                        <div className="text-4xl font-extrabold mt-20">
+                <div id="left" className="flex-1 flex items-center justify-center transform -translate-y-10"> 
+                    <div className="flex flex-col justify-start space-y-6"> 
+                        <div className="text-4xl font-extrabold cursor-pointer" onClick={goHome}>
                             JoyfulWait
                         </div>
-                        <div className="flex flex-col gap-6">
+                        <div className="flex flex-col space-y-4">
                             <div className="text-3xl font-semibold">
                                 No more queue line
                             </div>
                             <div className="text-gray-200 font-extralight w-[80%]">
-                                Quickly and conveniently search and book
-                                restaurant tables online. With just one click,
-                                you can check table availability.
+                                Quickly and conveniently search and book restaurant tables online.
+                                With just one click, you can check table availability.
                             </div>
                         </div>
                     </div>
                 </div>
+
                 {/* right */}
 
                 <div id="right" className="flex-1">
@@ -224,15 +228,15 @@ export default function Register() {
                                 <h1 className="font-bold text-2xl">Create an Account </h1>
                             </div>
                             <div className="my-3">
-                                <Input 
-                                    type="text" 
-                                    name="userName" 
-                                    value={credentials.userName} 
-                                    onChange={handleChange} 
-                                    label="User Name" 
-                                    variant="bordered" 
-                                    placeholder="name" 
-                                    className="m-auto" 
+                                <Input
+                                    type="text"
+                                    name="userName"
+                                    value={credentials.userName}
+                                    onChange={handleChange}
+                                    label="User Name"
+                                    variant="bordered"
+                                    placeholder="name"
+                                    className="m-auto"
                                 />
                                 {registerError.fieldErrors.userName && (
                                     <p className="text-red-500 text-xs">{registerError.fieldErrors.userName}</p>
@@ -256,30 +260,30 @@ export default function Register() {
                                 )}
                             </div>
                             <div className="my-3">
-                                <Input 
-                                    type="email" 
-                                    name="userEmail" 
-                                    value={credentials.userEmail} 
-                                    onChange={handleChange} 
-                                    label="E-mail" 
-                                    variant="bordered" 
-                                    placeholder="@gmail.com" 
-                                    className="m-auto" 
+                                <Input
+                                    type="email"
+                                    name="userEmail"
+                                    value={credentials.userEmail}
+                                    onChange={handleChange}
+                                    label="E-mail"
+                                    variant="bordered"
+                                    placeholder="@gmail.com"
+                                    className="m-auto"
                                 />
                                 {registerError.fieldErrors.userEmail && (
                                     <p className="text-red-500 text-xs">{registerError.fieldErrors.userEmail}</p>
                                 )}
                             </div>
                             <div className="my-3">
-                                <Input 
-                                    type="password" 
-                                    name="userPass" 
-                                    value={credentials.userPass} 
-                                    onChange={handleChange} 
-                                    label="Password" 
-                                    variant="bordered" 
-                                    placeholder="password" 
-                                    className="m-auto" 
+                                <Input
+                                    type="password"
+                                    name="userPass"
+                                    value={credentials.userPass}
+                                    onChange={handleChange}
+                                    label="Password"
+                                    variant="bordered"
+                                    placeholder="password"
+                                    className="m-auto"
                                 />
                                 {registerError.fieldErrors.userPass && (
                                     <p className="text-red-500 text-xs">{registerError.fieldErrors.userPass}</p>
