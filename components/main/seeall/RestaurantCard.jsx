@@ -1,5 +1,5 @@
 "use client";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, Input } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
@@ -137,32 +137,53 @@ const RestaurantCard = ({ restaurant }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {filteredRestaurants.map((restaurant) => (
-                    <div
-                        key={restaurant._id}
-                        className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
-                        onClick={() => handleCardClick(restaurant._id)}
-                    >
-                        <img
-                            src={restaurant.image}
-                            alt={restaurant.name}
-                            className="w-full h-48 object-cover"
-                        />
-                        <div className="p-4">
-                            <h3 className="text-lg font-semibold">{restaurant.name}</h3>
-                            <p className="text-sm text-gray-500">{restaurant.address}</p>
-                            <div className="flex items-center mt-2">
-                                {renderStars(restaurant.averageRating)}
-                                <span className="ml-2 text-sm text-gray-500">
-                                    ({restaurant.averageRating})
-                                </span>
-                                <span className="text-sm text-gray-500 ml-2">({restaurant.reviews.length} reviews)</span>
+                {filteredRestaurants.map((restaurant) => {
+                    // ฟังก์ชันสำหรับตัดคำอธิบายที่ยาวเกินไป
+                    const truncateText = (text, maxLength) => {
+                        if (text.length > maxLength) {
+                            return text.slice(0, maxLength) + '...';
+                        }
+                        return text;
+                    };
+
+                    return (
+                        <div
+                            key={restaurant._id}
+                            className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col h-full"
+                            onClick={() => handleCardClick(restaurant._id)}
+                            style={{ width: '100%' }} // กำหนดให้ card มีความกว้างเท่ากัน
+                        >
+                            <img
+                                src={restaurant.image}
+                                alt={restaurant.name}
+                                className="w-full h-48 object-cover"
+                            />
+                            <div className="flex-grow py-4 px-4 flex flex-col justify-between">
+                                <h3 className="text-lg font-semibold">{restaurant.name}</h3>
+                                <p className="text-sm text-gray-500">{restaurant.address}</p>
+
+                                {/* จัดให้การแสดงผลดาวอยู่ที่ตำแหน่งเดียวกันในทุก card */}
+                                <div className="mt-2 flex-grow flex items-end">
+                                    <div className="flex items-center">
+                                        {renderStars(restaurant.averageRating)}
+                                        <span className="ml-2 text-sm text-gray-500">
+                                            ({restaurant.averageRating})
+                                        </span>
+                                        <span className="text-sm text-gray-500 ml-2">({restaurant.reviews.length} reviews)</span>
+                                    </div>
+                                </div>
+
+                                {/* ใช้ truncateText สำหรับตัดคำอธิบาย */}
+                                <p className="text-sm text-gray-500 mt-2">
+                                    {truncateText(restaurant.notes, 100)}
+                                </p>
                             </div>
-                            <p className="text-sm text-gray-500 mt-2">{restaurant.notes}</p>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
+
+
         </div>
     );
 
