@@ -58,25 +58,35 @@ const RestaurantList = ({ restaurants }) => {
               onClick={() => handleCardClick(restaurant._id)}
             >
               <Card className="bg-white shadow-md rounded-lg overflow-hidden transition-transform duration-300 transform hover:scale-105 hover:shadow-lg h-full flex flex-col justify-between">
-                <CardHeader className="p-0">
-                  <img
-                    style={{ height: "180px", width: "100%", objectFit: "cover" }}
-                    className="rounded-t-lg"
-                    src={restaurant.image}
-                    alt={`Photo ${restaurant.logo}`}
-                  />
-                </CardHeader>
-                <CardBody className="flex-grow py-4 px-4 flex flex-col justify-between">
-                  <p className="text-lg font-semibold text-gray-800 line-clamp-2">{restaurant.name}</p>
-                  <div className="flex items-center mt-2">
-                    {renderStars(restaurant.averageRating)}
-                    <span className="ml-2 text-sm text-gray-500">
-                      ({restaurant.averageRating})
-                    </span>
-                  </div>
-                  <p className="text-gray-600 text-xs mt-1 line-clamp-2">{restaurant.address}</p>
-                </CardBody>
-              </Card>
+    <CardHeader className="p-0">
+        <img
+            style={{ height: "180px", width: "100%", objectFit: "cover" }}
+            className="rounded-t-lg"
+            src={restaurant.image}
+            alt={`Photo ${restaurant.logo}`}
+        />
+    </CardHeader>
+    <CardBody className="flex-grow py-4 px-4 flex flex-col justify-between">
+        {/* ส่วนของชื่อร้าน ใช้ min-height เพื่อให้ชื่อร้านสูงเท่ากันทุก card */}
+        <p className="text-lg font-semibold text-gray-800 line-clamp-2" style={{ minHeight: '48px' }}>
+            {restaurant.name}
+        </p>
+        
+        {/* จัดการส่วนของดาวให้ทุก card มีตำแหน่งเดียวกัน */}
+        <div className="flex items-center mt-2" style={{ minHeight: '32px' }}>
+            {renderStars(restaurant.averageRating)}
+            <span className="ml-2 text-sm text-gray-500">
+                ({restaurant.averageRating})
+            </span>
+        </div>
+        
+        {/* ส่วนของที่อยู่ ใช้ min-height ด้วยเพื่อจัดระเบียบ */}
+        <p className="text-gray-600 text-xs mt-1 line-clamp-2" style={{ minHeight: '40px' }}>
+            {restaurant.address}
+        </p>
+    </CardBody>
+</Card>
+
               <div className="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-300 bg-black"></div>
             </div>
           ))}
