@@ -4,20 +4,34 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 const renderStars = (rating) => {
+    const fullStars = Math.floor(rating); 
+    const hasHalfStar = rating - fullStars >= 0.3 && rating - fullStars <= 0.7; 
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); 
+
     return (
         <div className="flex">
-            {[...Array(5)].map((_, index) => (
-                <span
-                    key={index}
-                    className={`text-xl mr-1 ${index < Math.round(rating) ? "text-yellow-400" : "text-gray-300"
-                        }`}
-                >
+            {/* ดาวเต็ม */}
+            {[...Array(fullStars)].map((_, index) => (
+                <span key={index} className="text-xl mr-1 text-yellow-400">
+                    &#9733;
+                </span>
+            ))}
+            {/* ดาวครึ่ง */}
+            {hasHalfStar && (
+                <span className="text-xl mr-1 text-yellow-400">
+                    &#9734; 
+                </span>
+            )}
+            {/* ดาวเปล่า */}
+            {[...Array(emptyStars)].map((_, index) => (
+                <span key={index} className="text-xl mr-1 text-gray-300">
                     &#9733;
                 </span>
             ))}
         </div>
     );
 };
+
 
 const RestaurantCard = ({ restaurant }) => {
     const router = useRouter();
@@ -47,10 +61,17 @@ const RestaurantCard = ({ restaurant }) => {
             const dayInfo = restaurant.openingHours[selectedDayValue.toLowerCase()];
             const matchesDay =
                 selectedDayValue === "All Days" || (dayInfo && dayInfo.open.toLowerCase() === "on");
-            const matchesRating = selectedValue === "ALL" || Number(restaurant.averageRating) == Number(selectedValue);
+    
+            // กรองตาม rating (เช็คว่า rating ของร้านอาหารอยู่ในช่วงค่าของ rating ที่เลือก)
+            const matchesRating =
+                selectedValue === "ALL" ||
+                (Number(restaurant.averageRating) >= Number(selectedValue) &&
+                    Number(restaurant.averageRating) < Number(selectedValue) + 1);
+    
             return matchesName && matchesDay && matchesRating;
         });
     }, [restaurant, searchTerm, selectedDayValue, selectedValue]);
+    
 
     return (
         <div className="p-6">
