@@ -76,13 +76,14 @@ function Map({ restaurants }) {
     router.push(`/detail_restaurant/${id}`);
   };
 
-  // Function to handle pagination (next and previous buttons)
+  // Function to handle next click
   const handleNextClick = () => {
     if (currentIndex + restaurantsPerPage < nearbyRestaurants.length) {
       setCurrentIndex(currentIndex + restaurantsPerPage);
     }
   };
 
+  // Function to handle previous click
   const handlePrevClick = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - restaurantsPerPage);
@@ -90,7 +91,7 @@ function Map({ restaurants }) {
   };
 
   return (
-    <div>
+    <div className="relative">
       {/* Map section */}
       <div className="border border-gray-100 rounded-lg overflow-hidden">
         <MapContainer center={currentPosition} zoom={13} className="w-full h-80">
@@ -113,7 +114,17 @@ function Map({ restaurants }) {
       {/* Display the list of nearby restaurants */}
       <div className="restaurant-list mt-4">
         {nearbyRestaurants.length > 0 ? (
-          <div className="flex flex-col items-center">
+          <div className="flex items-center justify-center relative">
+            {/* Left arrow */}
+            {currentIndex > 0 && (
+              <button
+                className="absolute left-0 z-10 text-gray-700 py-2 px-4 rounded-full text-2xl font-bold hover:bg-gray-200"
+                onClick={handlePrevClick}
+              >
+                &#60;
+              </button>
+            )}
+
             {/* Display 5 restaurants per page */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 justify-center">
               {nearbyRestaurants
@@ -123,7 +134,7 @@ function Map({ restaurants }) {
                     key={index}
                     className="card border rounded-lg p-4 mb-2 shadow-md cursor-pointer transition-transform duration-300 hover:scale-105"
                     onClick={() => handleRestaurantClick(restaurant._id)}
-                    style={{ width: '250px', height: '350px' }} // ขยายขนาดการ์ด
+                    style={{ width: '250px', height: '350px' }} // Enlarged card size
                   >
                     <img
                       src={restaurant.image || 'https://via.placeholder.com/150'}
@@ -142,28 +153,21 @@ function Map({ restaurants }) {
                 ))}
             </div>
 
-            {/* Pagination buttons */}
-            <div className="flex justify-between mt-4 w-full">
-              {currentIndex > 0 && (
-                <button
-                  className="bg-gray-200 text-gray-700 py-2 px-4 rounded-l"
-                  onClick={handlePrevClick}
-                >
-                  Previous
-                </button>
-              )}
-              {currentIndex + restaurantsPerPage < nearbyRestaurants.length && (
-                <button
-                  className="bg-gray-200 text-gray-700 py-2 px-4 rounded-r"
-                  onClick={handleNextClick}
-                >
-                  Next
-                </button>
-              )}
-            </div>
+            {/* Right arrow */}
+            {currentIndex + restaurantsPerPage < nearbyRestaurants.length && (
+              <button
+                className="absolute right-0 z-10 text-gray-700 py-2 px-4 rounded-full text-2xl font-bold hover:bg-gray-200"
+                onClick={handleNextClick}
+              >
+                &#62;
+              </button>
+            )}
           </div>
         ) : (
-          <p>No nearby restaurants within 10 km.</p>
+          <p className='font-bold text-lg text-red-500 bg-red-100 border border-red-400 rounded-lg p-4 text-center mt-8'>
+            No nearby restaurants within 10 km.
+          </p>
+
         )}
       </div>
     </div>
