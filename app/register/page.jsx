@@ -298,14 +298,6 @@ export default function Register() {
                                 <Button className="w-full" type="submit">GET STARTED</Button>
                             </div>
                         </form>
-                        <div className="flex">
-                            <div className="w-2/4"><h2 className="w-full text-center border-b leading-3 mt-3"></h2></div>
-                            <div className="w-1/4 text-center"><h1>or</h1></div>
-                            <div className="w-2/4"><h2 className="w-full text-center border-b leading-3 mt-3"></h2></div>
-                        </div>
-                        <div className="mt-4 text-center">
-                            <Button className="w-full" onClick={() => { signIn("google"); }} variant="bordered" startContent={<Image src={imgeGoogle} width={35} height={35} alt="Google" />}>Continue with Google</Button>
-                        </div>
                         <div className="mt-4 text-center">
                             <p className="w-full" style={{ transition: "color 0.3s" }}>
                                 Already have an account? <span className="cursor-pointer" onClick={handleLogin} style={{ color: "#1E90FF", transition: "color 0.3s" }}
