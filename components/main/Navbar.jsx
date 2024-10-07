@@ -1,5 +1,4 @@
-"use client"; // Ensure the component is treated as a Client Component
-
+"use client";
 import React, { useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import {
@@ -14,7 +13,7 @@ import {
   DropdownItem,
 } from "@nextui-org/react";
 import Image from "next/image";
-import bannerApp from "@/public/images/logo.png";
+import bannerApp from "@/public/j.png";
 import { usePathname, useRouter } from "next/navigation";
 
 const NavbarComponent = () => {
@@ -24,12 +23,14 @@ const NavbarComponent = () => {
   const excludedPaths = ["/login", "/register", "/restaurant", "/admin", "/role"];
   const excludedPaths1 = ["/restaurant", "/admin", "/"];
 
+  // บันทึก path ก่อนหน้าหากไม่มี session
   useEffect(() => {
     if (!session && !excludedPaths.some((path) => pathname.startsWith(path))) {
       localStorage.setItem("previousPath", pathname);
     }
   }, [pathname, session, excludedPaths]);
 
+  // ตรวจสอบ session หากเพิ่ง login และนำทางไปยัง path ก่อนหน้า
   useEffect(() => {
     if (excludedPaths1.some((path) => pathname.startsWith(path))) {
       return;
@@ -51,12 +52,7 @@ const NavbarComponent = () => {
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <Image src={bannerApp} alt="bannerApp" width={60} height={60} />
-          <p
-            className="hidden sm:block font-semibold text-xl text-gray-800 cursor-pointer transition-colors duration-300 ease-in-out"
-            onClick={() => router.push("/")}
-          >
-            JoyfulWait
-          </p>
+          <p className="hidden sm:block font-bold text-inherit cursor-pointer" onClick={() => router.push("/")}>Joyfullwait</p>
         </NavbarBrand>
       </NavbarContent>
 
@@ -64,7 +60,7 @@ const NavbarComponent = () => {
         {session?.user ? (
           <>
             <div className="text-right">
-              <p className="text-sm font-semibold">Hi</p>
+              <p className="text-sm font-semibold">สวัสดี</p>
               <p className="text-lg font-bold text-gray-300">{session?.user?.name}</p>
             </div>
             <Dropdown placement="bottom-end">
@@ -84,7 +80,7 @@ const NavbarComponent = () => {
                     key="go-to-restaurant"
                     onClick={() => router.push(`/restaurant/${session?.user?.id}`)}
                   >
-                    Go to Restaurant
+                    Go To Restaurant
                   </DropdownItem>
                 ) : null}
                 {session?.user?.role === "admin" ? (
@@ -93,37 +89,20 @@ const NavbarComponent = () => {
                     key="go-to-restaurant"
                     onClick={() => router.push(`/admin/${session?.user?.id}`)}
                   >
-                    Go to admin
+                    Go To admin
                   </DropdownItem>
                 ) : null}
 
-                <DropdownItem
-                  startContent={<span className="material-symbols-outlined">logout</span>}
-                  key="logout"
-                  color="danger"
-                  onClick={() => signOut()}
-                >
-                  Log Out
-                </DropdownItem>
+                
+                <DropdownItem startContent={<span className="material-symbols-outlined">library_books</span>} key="booking" onClick={() => router.push(`/booking/${session?.user?.id}`)}>My Booking</DropdownItem>
+                <DropdownItem startContent={<span className="material-symbols-outlined">logout</span>} key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </>
         ) : (
-          <div className="flex space-x-4">
-            <button
-              onClick={() => router.push("/login")}
-              className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => router.push("/register")}
-              className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
-            >
-              Register
-            </button>
-          </div>
-
+          <button onClick={() => router.push("/login")} className="btn-login">
+            Login
+          </button>
         )}
       </NavbarContent>
     </Navbar>
