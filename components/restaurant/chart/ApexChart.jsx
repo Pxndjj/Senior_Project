@@ -25,7 +25,14 @@ const months = [
 ];
 
 const ApexChart = ({ data }) => {
-  const availableYears = [...new Set(data.map((item) => new Date(item.queue_date).getFullYear()))];
+  const availableYears = [
+    ...new Set(
+      data.map((item) => {
+        const year = new Date(item.queue_date).getFullYear();
+        return isNaN(year) ? new Date().getFullYear() : year;
+      })
+    ),
+  ];
 
   const [series, setSeries] = useState([]);
   const [options, setOptions] = useState({
@@ -53,7 +60,9 @@ const ApexChart = ({ data }) => {
   });
   const [selectedPeriod, setSelectedPeriod] = useState("month");
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
-  const [selectedYear, setSelectedYear] = useState(availableYears[0]);
+  const [selectedYear, setSelectedYear] = useState(
+    availableYears[0] || new Date().getFullYear()
+  );
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -117,7 +126,6 @@ const ApexChart = ({ data }) => {
 
     const { tempSeries, categories } = processData(data, period);
 
-    // Simulate loading with a timeout
     const interval = setInterval(() => {
       setProgress((oldProgress) => {
         if (oldProgress === 100) {
@@ -185,7 +193,7 @@ const ApexChart = ({ data }) => {
             </DropdownMenu>
           </Dropdown>
 
-          {selectedPeriod === "month" && (
+          {(selectedPeriod !== "year" && selectedPeriod !== "month") && (
             <Dropdown>
               <DropdownTrigger>
                 <Button variant="bordered" className="capitalize">
@@ -229,20 +237,15 @@ const ApexChart = ({ data }) => {
             </Dropdown>
           )}
         </div>
-
       </div>
 
-
-
       {loading ? (
-
         <div className="flex flex-col justify-center items-center mt-6 relative">
           <div className="w-24 h-24 border-4 border-gray-200 border-t-blue-500 border-solid rounded-full animate-spin"></div>
           <div className="absolute text-blue-500 text-lg font-semibold">
             {progress}%
           </div>
         </div>
-
       ) : (
         <div id="chart">
           <ReactApexChart options={options} series={series} type="bar" height={350} />
