@@ -52,7 +52,7 @@ const NavbarComponent = () => {
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
           <Image src={bannerApp} alt="bannerApp" width={60} height={60} />
-          <p className="hidden sm:block font-bold text-inherit cursor-pointer" onClick={() => router.push("/")}>Joyfullwait</p>
+          <p className="hidden sm:block font-bold text-inherit cursor-pointer" onClick={() => router.push("/")}>JoyfulWait</p>
         </NavbarBrand>
       </NavbarContent>
 
@@ -60,7 +60,7 @@ const NavbarComponent = () => {
         {session?.user ? (
           <>
             <div className="text-right">
-              <p className="text-sm font-semibold">สวัสดี</p>
+              <p className="text-sm font-semibold">Hi</p>
               <p className="text-lg font-bold text-gray-300">{session?.user?.name}</p>
             </div>
             <Dropdown placement="bottom-end">

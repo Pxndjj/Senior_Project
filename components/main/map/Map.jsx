@@ -21,7 +21,7 @@ const userLocationIcon = L.icon({
 });
 
 // Function to calculate the distance between two points using Haversine formula
-function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+function getDistanceFromInKm(lat1, lon1, lat2, lon2) {
   const R = 6371; // Radius of the earth in km
   const dLat = deg2rad(lat2 - lat1); // deg2rad below
   const dLon = deg2rad(lon2 - lon1);
@@ -56,7 +56,7 @@ function Map({ restaurants }) {
 
         // Filter nearby restaurants within 10 km
         const filteredRestaurants = restaurants.filter((restaurant) => {
-          const distance = getDistanceFromLatLonInKm(
+          const distance = getDistanceFromInKm(
             latitude, longitude,
             restaurant.position[0], restaurant.position[1]
           );
@@ -133,7 +133,7 @@ function Map({ restaurants }) {
                     <h3 className="font-bold text-lg mt-2">{restaurant.name}</h3>
                     <p className="text-gray-600 text-sm">{restaurant.address}</p>
                     <p className="text-sm">
-                      Distance: {getDistanceFromLatLonInKm(
+                      Distance: {getDistanceFromInKm(
                         currentPosition[0], currentPosition[1],
                         restaurant.position[0], restaurant.position[1]
                       ).toFixed(2)} km
