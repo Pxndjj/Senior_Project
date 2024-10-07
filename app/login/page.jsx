@@ -1,226 +1,167 @@
 "use client";
-
-import { Button, Input } from "@nextui-org/react";
-import logoGoogle from "@/public/google.svg";
+import { Button, Card, Input } from "@nextui-org/react";
 import React, { useState } from "react";
-import Image from "next/image";
 import { signIn } from "next-auth/react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
-  const router = useRouter();
-  const [credentials, setCredentials] = useState({
-    userPass: "",
-    userPhone: "",
-    userEmail: "",
-  });
-  const [messageInput, setMessageInput] = useState("");
-  const [messagelogin, setMessagelogin] = useState("");
-  const [actionLogin, setActionLogin] = useState("phone");
-  const params = useParams();
+    const router = useRouter();
+    const [credentials, setCredentials] = useState({
+        userPass: "",
+        userPhone: "",
+        userEmail: "",
+    });
+    const [messageInput, setMessageInput] = useState("");
+    const [messagelogin, setMessagelogin] = useState("");
+    const [actionLogin, setActionLogin] = useState("phone");
 
-  const handleClick = (loginType) => {
-    setActionLogin(loginType);
-  };
+    const handleClick = (loginType) => {
+        setActionLogin(loginType);
+    };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setCredentials((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    console.log(value);
-  };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setCredentials((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        if (
+            (credentials.userEmail === "" && credentials.userPhone === "") ||
+            credentials.userPass === ""
+        ) {
+            setMessageInput("Please enter complete information!");
+        } else {
+            const resUser = await signIn("credentials", {
+                userPass: credentials.userPass,
+                userPhone: credentials.userPhone,
+                userEmail: credentials.userEmail,
+                redirect: false,
+            });
 
-    if (
-      (credentials.userEmail == "" || credentials.userPhone == "") &&
-      credentials.userPass == ""
-    ) {
-      console.log("Please enter complete information!");
-      setMessageInput("Please enter complete information!");
-    } else {
-      const resUser = await signIn("credentials", {
-        userPass: credentials.userPass,
-        userPhone: credentials.userPhone,
-        userEmail: credentials.userEmail,
-        redirect: false,
-      });
-
-      console.log(resUser);
-      if (resUser.ok) {
-        setMessagelogin("Success");
-        const resModels = await fetch(`http://localhost:3000/api/auth/session`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        });
-        const data = await resModels.json();
-
-        if (data.user.role === 'restaurant') {
-          router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/restaurant/${data.user.id}`);
-        } else if (data.user.role === 'user') {
-          router.push('/');
-        } else if (data.user.role === 'admin') {
-          router.push(`${process.env.NEXT_PUBLIC_BASE_URL}/admin/${data.user.id}`);
+            if (resUser.ok) {
+                setMessagelogin("Success");
+                router.push('/');
+            } else {
+                setMessageInput("Please check your information is correct!");
+            }
         }
-        
-      } else {
-        setMessageInput("Please check your information is correct!");
-      }
-    }
-  };
+    };
 
-  const handleRegister = () => {
-    router.push('/register');
-  };
+    const handleRegister = () => {
+        router.push('/register');
+    };
 
-  const goHome = () => {
-    router.push('/');
-  };
+    const goHome = () => {
+        router.push('/');
+    };
 
-  return (
-    <main>
-      <div className="flex w-[50rem] m-auto">
-        <div className="w-2/4 m-auto">
-          <div className="text-3xl cursor-pointer" onClick={goHome}>
-            <p>JoyfulWait</p>
-          </div>
+    return (
+        <div className="bg-image-default h-screen flex justify-center items-end">
+            <div className="flex gap-6 w-[70%] h-[85%] text-white">
+                {/* left */}
+                <div id="left" className="flex-1 flex items-center justify-center transform -translate-y-10">
+                    <div className="flex flex-col justify-start space-y-6">
+                        <div className="text-4xl font-extrabold cursor-pointer" onClick={goHome}>
+                            JoyfulWait
+                        </div>
+                        <div className="flex flex-col space-y-4">
+                            <div className="text-3xl font-semibold">
+                                Welcome back!
+                            </div>
+                            <div className="text-gray-200 font-extralight w-[80%]">
+                                Quickly and securely log in to your account to access restaurant reservations.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* right */}
+                <div id="right" className="flex-1">
+                    <Card className="h-full w-full rounded-b-none p-8 overflow-auto">
+                        <form onSubmit={handleLogin}>
+                            <div className="mb-2">
+                                <p className="text-xs">WELCOME BACK <span className="text-green-500 text-sm">{messagelogin}</span></p>
+                            </div>
+                            <div className="mb-5">
+                                <h1 className="font-bold text-2xl">Log In to your Account</h1>
+                            </div>
+
+                            {actionLogin === "phone" ? (
+                                <div className="my-3">
+                                    <Input
+                                        type="text"
+                                        name="userPhone"
+                                        value={credentials.userPhone}
+                                        onChange={handleChange}
+                                        label="Phone"
+                                        variant="bordered"
+                                        placeholder="Enter your phone number"
+                                        className="m-auto"
+                                    />
+                                </div>
+                            ) : (
+                                <div className="my-3">
+                                    <Input
+                                        type="email"
+                                        name="userEmail"
+                                        value={credentials.userEmail}
+                                        onChange={handleChange}
+                                        label="E-mail"
+                                        variant="bordered"
+                                        placeholder="Enter your email"
+                                        className="m-auto"
+                                    />
+                                </div>
+                            )}
+
+                            <div className="my-3">
+                                <Input
+                                    type="password"
+                                    name="userPass"
+                                    value={credentials.userPass}
+                                    onChange={handleChange}
+                                    label="Password"
+                                    variant="bordered"
+                                    placeholder="Enter your password"
+                                    className="m-auto"
+                                />
+                            </div>
+
+                            <div className="my-3">
+                                <p className="text-red-500 text-sm">{messageInput}</p>
+                            </div>
+
+                            <div className="my-3">
+                                {actionLogin === "phone" ? (
+                                    <p>
+                                        Login with E-mail <span className="text-blue-500 cursor-pointer" onClick={() => handleClick("email")}>Click here</span>
+                                    </p>
+                                ) : (
+                                    <p>
+                                        Login with Phone <span className="text-blue-500 cursor-pointer" onClick={() => handleClick("phone")}>Click here</span>
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="my-3">
+                                <Button className="w-full" type="submit">CONTINUE</Button>
+                            </div>
+                        </form>
+
+                        <div className="mt-4 text-center">
+                            <p className="w-full" style={{ transition: "color 0.3s" }}>
+                                No account? <span className="cursor-pointer" onClick={handleRegister} style={{ color: "#1E90FF", transition: "color 0.3s" }}
+                                    onMouseEnter={(e) => e.target.style.color = "#104E8B"}
+                                    onMouseLeave={(e) => e.target.style.color = "#1E90FF"}>Register</span>
+                            </p>
+                        </div>
+                    </Card>
+                </div>
+            </div>
         </div>
-        <div className="w-1/5"></div>
-        <div className="w-2/5">
-          <div className="m-auto mt-5">
-            <>
-              <form onSubmit={handleLogin}>
-                <div className="mb-2">
-                  <p className="text-xs">
-                    WELCOME BACK{" "}
-                    <span className="text-green-500 text-sm">{messagelogin}</span>
-                  </p>
-                </div>
-                <div className="mb-5">
-                  <h1 className="font-bold text-2xl">Log In to your Account</h1>
-                </div>
-                {actionLogin == "phone" ? (
-                  <div className="my-3">
-                    <Input
-                      type="text"
-                      name="userPhone"
-                      value={credentials.userPhone}
-                      onChange={handleChange}
-                      label="Phone"
-                      variant="bordered"
-                      placeholder="phone-number"
-                      className="max-w-xs m-auto"
-                    />
-                  </div>
-                ) : (
-                  <div className="my-3">
-                    <Input
-                      type="email"
-                      name="userEmail"
-                      value={credentials.userEmail}
-                      onChange={handleChange}
-                      label="E-mail"
-                      variant="bordered"
-                      placeholder="@gmail.com"
-                      className="max-w-xs m-auto"
-                    />
-                  </div>
-                )}
-                <div className="my-3">
-                  <Input
-                    type="password"
-                    name="userPass"
-                    value={credentials.userPass}
-                    onChange={handleChange}
-                    label="Password"
-                    variant="bordered"
-                    placeholder="password"
-                    className="max-w-xs m-auto"
-                  />
-                </div>
-                <div className="my-3">
-                  <p className="text-red-500 text-sm">{messageInput}</p>
-                </div>
-                <div className="my-3">
-                  {actionLogin == "phone" ? (
-                    <p>
-                      Login with E-mail{" "}
-                      <span
-                        className="text-blue-500 cursor-pointer"
-                        onClick={() => handleClick("email")}
-                      >
-                        Click!!
-                      </span>
-                    </p>
-                  ) : (
-                    <p>
-                      Login with Phone{" "}
-                      <span
-                        className="text-blue-500 cursor-pointer"
-                        onClick={() => handleClick("phone")}
-                      >
-                        Click!!
-                      </span>
-                    </p>
-                  )}
-                </div>
-                <div className="my-3">
-                  <Button
-                    className="w-full"
-                    type="submit"
-                    style={{ backgroundColor: "#1E90FF", color: "#fff" }}
-                  >
-                    CONTINUE
-                  </Button>
-                </div>
-              </form>
-            </>
-            <div className="flex">
-              <div className="w-2/4">
-                <h2 className="w-full text-center border-b leading-3 mt-3"></h2>
-              </div>
-              <div className="w-1/4 text-center">
-                <h1>or</h1>
-              </div>
-              <div className="w-2/4">
-                <h2 className="w-full text-center border-b leading-3 mt-3"></h2>
-              </div>
-            </div>
-            <div className="mt-4 text-center">
-              <Button
-                className="w-full"
-                onClick={() => {
-                  signIn("google");
-                }}
-                variant="bordered"
-                startContent={<Image src={logoGoogle} width={35} height={35} alt="123" />}
-              >
-                Continue with Google
-              </Button>
-            </div>
-            <div className="mt-4 text-center">
-              <p className="w-full" style={{ transition: "color 0.3s" }}>
-                No account?{" "}
-                <span
-                  className="cursor-pointer"
-                  onClick={handleRegister}
-                  style={{ color: "#1E90FF", transition: "color 0.3s" }}
-                  onMouseEnter={(e) => (e.target.style.color = "#104E8B")}
-                  onMouseLeave={(e) => (e.target.style.color = "#1E90FF")}
-                >
-                  Register
-                </span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </main>
-  );
+    );
 }

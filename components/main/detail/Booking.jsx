@@ -326,8 +326,18 @@ const AddQueue = ({ restaurantID }) => {
                                 <Input value={partySize} onValueChange={setPartySize} placeholder="Other" variant="bordered" size="md" type="text" label="Party Size" className="custom-input" />
                                 <Input name="customer_number" value={modelAdd.customer_number} onChange={handleChangeData} placeholder="Enter your contact number" variant="bordered" size="md" label="Contact Number" />
                                 {!dataError.customer_number && <span className="text-red-500 text-sm">Please enter your phone number.</span>}
-                                <DatePicker label="Booking Date" name="time_of_booking" value={valueDateTime} onChange={handleDateChange} variant="bordered" hourCycle={24} placeholderValue={now("Asia/Bangkok")} showMonthAndYearPickers minValue={today(getLocalTimeZone())}
-                                defaultValue={today(getLocalTimeZone()).subtract({ days: 1 })} />
+                                <DatePicker
+                                    label="Booking Date"
+                                    name="time_of_booking"
+                                    value={valueDateTime}
+                                    onChange={(date) => setValueDateTime(date)} 
+                                    variant="bordered"
+                                    hourCycle={24}
+                                    placeholderValue={now("Asia/Bangkok")}
+                                    showMonthAndYearPickers
+                                    minValue={today(getLocalTimeZone())} 
+                                />
+
 
                             </div>
                         )}
@@ -355,7 +365,7 @@ const AddQueue = ({ restaurantID }) => {
                         </div>
                         <img src="/line_joyfulwait.png" alt="QR Code for verification" className="h-[10rem] mb-4 rounded-md shadow-md" />
                         <p className="mt-2 text-center text-gray-600">
-                        Please open the LINE application and send this verification code.
+                            Please open the LINE application and send this verification code.
                             <strong className="text-blue-600"> {verifyCode} </strong>
                             Allow us to verify your identity.
                         </p>
