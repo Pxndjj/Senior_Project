@@ -54,13 +54,13 @@ function Map({ restaurants }) {
         console.log('Current Position:', latitude, longitude);
         setCurrentPosition([latitude, longitude]);
 
-        // Filter nearby restaurants within 10 km
+        // Filter nearby restaurants within 10 km and that are "active"
         const filteredRestaurants = restaurants.filter((restaurant) => {
           const distance = getDistanceFromInKm(
             latitude, longitude,
             restaurant.position[0], restaurant.position[1]
           );
-          return distance <= 10; // 10 km range
+          return distance <= 10 && restaurant.status === "active"; // 10 km range and active status
         });
 
         setNearbyRestaurants(filteredRestaurants);

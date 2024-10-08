@@ -54,24 +54,16 @@ const RestaurantCard = ({ restaurant }) => {
         [selectedDay]
     );
 
-
     const filteredRestaurants = useMemo(() => {
         return restaurant.filter((restaurant) => {
             const matchesName = restaurant.name.toLowerCase().includes(searchTerm.toLowerCase());
             const dayInfo = restaurant.openingHours[selectedDayValue.toLowerCase()];
-            const matchesDay =
-                selectedDayValue === "All Days" || (dayInfo && dayInfo.open.toLowerCase() === "on");
-    
-            // กรองตาม rating (เช็คว่า rating ของร้านอาหารอยู่ในช่วงค่าของ rating ที่เลือก)
-            const matchesRating =
-                selectedValue === "ALL" ||
-                (Number(restaurant.averageRating) >= Number(selectedValue) &&
-                    Number(restaurant.averageRating) < Number(selectedValue) + 1);
-    
+            const matchesDay = selectedDayValue === "All Days" || (dayInfo && dayInfo.open.toLowerCase() === "on");
+            const matchesRating = selectedValue === "ALL" || Number(restaurant.averageRating) == Number(selectedValue);
+
             return matchesName && matchesDay && matchesRating;
         });
     }, [restaurant, searchTerm, selectedDayValue, selectedValue]);
-    
 
     return (
         <div className="p-6">
@@ -123,7 +115,6 @@ const RestaurantCard = ({ restaurant }) => {
                         selectedKeys={selectedDay}
                         onSelectionChange={setSelectedDay}
                     >
-                        {/* ตัวเลือกวันในสัปดาห์ */}
                         <DropdownItem key="All Days">All Days</DropdownItem>
                         <DropdownItem key="Monday">Monday</DropdownItem>
                         <DropdownItem key="Tuesday">Tuesday</DropdownItem>
@@ -137,56 +128,36 @@ const RestaurantCard = ({ restaurant }) => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {filteredRestaurants.map((restaurant) => {
-                    // ฟังก์ชันสำหรับตัดคำอธิบายที่ยาวเกินไป
-                    const truncateText = (text, maxLength) => {
-                        if (text.length > maxLength) {
-                            return text.slice(0, maxLength) + '...';
-                        }
-                        return text;
-                    };
-
-                    return (
-                        <div
-                            key={restaurant._id}
-                            className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer flex flex-col h-full"
-                            onClick={() => handleCardClick(restaurant._id)}
-                            style={{ width: '100%' }} // กำหนดให้ card มีความกว้างเท่ากัน
-                        >
-                            <img
-                                src={restaurant.image}
-                                alt={restaurant.name}
-                                className="w-full h-48 object-cover"
-                            />
-                            <div className="flex-grow py-4 px-4 flex flex-col justify-between">
-                                <h3 className="text-lg font-semibold">{restaurant.name}</h3>
-                                <p className="text-sm text-gray-500">{restaurant.address}</p>
-
-                                {/* จัดให้การแสดงผลดาวอยู่ที่ตำแหน่งเดียวกันในทุก card */}
-                                <div className="mt-2 flex-grow flex items-end">
-                                    <div className="flex items-center">
-                                        {renderStars(restaurant.averageRating)}
-                                        <span className="ml-2 text-sm text-gray-500">
-                                            ({restaurant.averageRating})
-                                        </span>
-                                        <span className="text-sm text-gray-500 ml-2">({restaurant.reviews.length} reviews)</span>
-                                    </div>
-                                </div>
-
-                                {/* ใช้ truncateText สำหรับตัดคำอธิบาย */}
-                                <p className="text-sm text-gray-500 mt-2">
-                                    {truncateText(restaurant.notes, 100)}
-                                </p>
+                {filteredRestaurants.filter((o) => o.status === "active").map((restaurant) => ( // แก้ไข inactive
+                    <div
+                        key={restaurant._id}
+                        className="border rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                        onClick={() => handleCardClick(restaurant._id)}
+                    >
+                        <img
+                            src={restaurant.image}
+                            alt={restaurant.name}
+                            className="w-full h-48 object-cover"
+                        />
+                        <div className="p-4">
+                            <h3 className="text-lg font-semibold">{restaurant.name}</h3>
+                            <p className="text-sm text-gray-500">{restaurant.address}</p>
+                            <div className="flex items-center mt-2">
+                                <span className="text-yellow-500 mr-1">★</span>
+                                <span className="text-sm">{restaurant.averageRating}</span>
+                                <span className="text-sm text-gray-500 ml-2">({restaurant.reviews.length} reviews)</span>
                             </div>
+                            <p className="text-sm text-gray-500 mt-2">{restaurant.notes}</p>
                         </div>
-                    );
-                })}
+                    </div>
+                ))}
             </div>
 
-
+            {filteredRestaurants.filter((o) => o.status === "active").length === 0 && (
+                <div className="text-center text-gray-500 mt-4 text-5xl p-[15rem]">NO DATA</div>
+            )}
         </div>
     );
-
 };
 
 export default RestaurantCard;

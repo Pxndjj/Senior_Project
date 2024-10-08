@@ -9,7 +9,7 @@ export default function Qrcode({ items }) {
     const [imageSrc, setImageSrc] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [blobLine, setBlobLine] = useState('');
     const { isOpen: isOpenVerification, onOpen: onOpenVerification, onOpenChange: onOpenChangeVerification } = useDisclosure();
     const [verifyCode, setVerifyCode] = useState("");
 
@@ -92,7 +92,6 @@ export default function Qrcode({ items }) {
             reader.readAsDataURL(blobLine);
             reader.onloadend = async function () {
                 const base64data = reader.result;
-
                 const sendImageResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/notificationmessage/send/${lineID}`, {
                     method: 'POST',
                     headers: {
@@ -132,6 +131,7 @@ export default function Qrcode({ items }) {
                 }
 
                 const blob = await response.blob(); // ใช้ await ที่นี่
+                setBlobLine(blob);
                 const imageUrl = URL.createObjectURL(blob);
                 setImageSrc(imageUrl);
             } catch (err) {

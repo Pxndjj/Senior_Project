@@ -181,7 +181,7 @@ const AddQueue = ({ restaurantID }) => {
     };
 
 
-    const [checkVerify, setCheckVerify] = useState(false);
+    const [checkVerify, setCheckVerify] = useState(); // บัคแสดงผิด
     const [lineID, setLineID] = useState("");
 
     const checkVerification = async () => {
@@ -301,7 +301,7 @@ const AddQueue = ({ restaurantID }) => {
                 hideCloseButton={true}
             >
                 <ModalContent>
-                    <ModalHeader className="flex flex-col gap-1">Detail Queue{checkVerify}</ModalHeader>
+                    <ModalHeader className="flex flex-col gap-1">Detail Queue</ModalHeader>
                     <ModalBody>
                         {imageSrc ? (
                             <>
