@@ -51,9 +51,14 @@ const NavbarComponent = () => {
     <Navbar isBordered maxWidth="full" className="z-[4000]">
       <NavbarContent justify="start">
         <NavbarBrand className="mr-4">
-          <Image src={bannerApp} alt="bannerApp" width={60} height={60} />
-          <p className="hidden sm:block font-bold text-inherit cursor-pointer" onClick={() => router.push("/")}>JoyfulWait</p>
+          <div className="cursor-pointer" onClick={() => router.push("/")}>
+            <Image src={bannerApp} alt="bannerApp" width={60} height={60} />
+          </div>
+          <p className="hidden sm:block font-bold text-inherit cursor-pointer" onClick={() => router.push("/")}>
+            JoyfulWait
+          </p>
         </NavbarBrand>
+
       </NavbarContent>
 
       <NavbarContent as="div" className="items-center" justify="end">
@@ -93,7 +98,7 @@ const NavbarComponent = () => {
                   </DropdownItem>
                 ) : null}
 
-                
+
                 <DropdownItem startContent={<span className="material-symbols-outlined">library_books</span>} key="booking" onClick={() => router.push(`/booking/${session?.user?.id}`)}>My Booking</DropdownItem>
                 <DropdownItem startContent={<span className="material-symbols-outlined">logout</span>} key="logout" color="danger" onClick={() => signOut()}>Log Out</DropdownItem>
               </DropdownMenu>
@@ -101,19 +106,19 @@ const NavbarComponent = () => {
           </>
         ) : (
           <div className="flex space-x-4">
-          <button
-            onClick={() => router.push("/login")}
-            className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => router.push("/register")}
-            className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
-          >
-            Register
-          </button>
-        </div>
+            <button
+              onClick={() => router.push("/login")}
+              className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => router.push("/register")}
+              className="border border-black text-black font-semibold py-2 px-4 rounded-full hover:bg-black hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              Register
+            </button>
+          </div>
         )}
       </NavbarContent>
     </Navbar>

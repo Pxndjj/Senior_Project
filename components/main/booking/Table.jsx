@@ -1,7 +1,7 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Button, Modal, ModalFooter, ModalHeader, ModalContent, ModalBody } from "@nextui-org/react";
-import Qrcode from './Qrcode';
+import Qrcode from "./Qrcode";
 
 const setTimeShow = (value) => {
     if (value === "") {
@@ -52,33 +52,30 @@ const queueStatus = (status) => {
 
 function Table({ modelBooking }) {
     const [selectedItem, setSelectedItem] = useState(null);
-    const [openModalIndex, setOpenModalIndex] = useState(null); // เก็บ index ของโมดาลที่เปิดอยู่
-    
-    // สำหรับการแบ่งข้อมูลเป็นหน้าต่างๆ
+    const [openModalIndex, setOpenModalIndex] = useState(null);
+
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10; // จำนวนรายการต่อหน้า
+    const itemsPerPage = 10;
     const totalPages = Math.ceil(modelBooking.length / itemsPerPage);
 
     const handleOpen = (item, index) => {
         setSelectedItem(item);
-        setOpenModalIndex(index); // กำหนด index ที่จะเปิดโมดาล
+        setOpenModalIndex(index);
     };
 
     const handleClose = () => {
-        setOpenModalIndex(null); // ปิดโมดาลเมื่อคลิกปิด
+        setOpenModalIndex(null);
     };
 
-    // การคำนวณข้อมูลที่จะแสดงในแต่ละหน้า
     const startIndex = (currentPage - 1) * itemsPerPage;
     const currentItems = modelBooking.slice(startIndex, startIndex + itemsPerPage);
 
-    // ฟังก์ชันสำหรับเปลี่ยนหน้า
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
     return (
-        <div className="mb-6 p-6 border border-gray-200 rounded-lg shadow-md h-[40rem]">
+        <div className="mb-6 p-6 border border-gray-200 rounded-lg shadow-md overflow-auto h-[40rem]">
             <table className="min-w-full table-auto border-collapse rounded-lg overflow-hidden">
                 <thead className="bg-gray-200">
                     <tr>
@@ -105,7 +102,7 @@ function Table({ modelBooking }) {
                             <td className="px-4 py-2 text-sm text-gray-500 text-center">{setTimeShow(item.time_of_booking)?.date}</td>
                             <td className="px-4 py-2 text-sm text-gray-500 text-center">{setTimeShow(item.time_of_booking)?.time}</td>
                             <td className="px-4 py-2 text-sm text-gray-500 text-center">
-                                <Button onPress={() => handleOpen(item, index)}>QR Code</Button>
+                                <Button onPress={() => handleOpen(item, index)} className="w-full sm:w-auto">QR Code</Button>
                                 <Modal isOpen={openModalIndex === index} onClose={handleClose}>
                                     <ModalContent>
                                         <ModalHeader className="flex flex-col gap-1">QR CODE</ModalHeader>
@@ -119,7 +116,7 @@ function Table({ modelBooking }) {
                     ))}
                 </tbody>
             </table>
-            
+
             {/* Pagination */}
             <div className="flex justify-center space-x-2 mt-4">
                 {Array.from({ length: totalPages }, (_, i) => (
@@ -127,9 +124,7 @@ function Table({ modelBooking }) {
                         key={i}
                         isDisabled={currentPage === i + 1}
                         onPress={() => handlePageChange(i + 1)}
-                        auto
-                        light={currentPage !== i + 1}
-                        flat={currentPage === i + 1}
+                        className={`w-full sm:w-auto ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
                     >
                         {i + 1}
                     </Button>

@@ -191,14 +191,14 @@ export default function Register() {
 
     const goHome = () => {
         router.push('/');
-      };
+    };
 
     return (
-        <div className="bg-image-default h-screen flex justify-center items-end">
-            <div className="flex gap-6 w-[70%] h-[85%] text-white">
+        <div className="bg-image-default h-screen flex flex-col lg:flex-row justify-center items-center lg:items-end">
+            <div className="flex flex-col lg:flex-row gap-6 w-full lg:w-[70%] h-auto lg:h-[85%] text-white px-4 lg:px-0">
                 {/* left */}
-                <div id="left" className="flex-1 flex items-center justify-center transform -translate-y-10"> 
-                    <div className="flex flex-col justify-start space-y-6"> 
+                <div id="left" className="flex-1 flex items-center justify-center transform lg:-translate-y-10">
+                    <div className="flex flex-col justify-start space-y-6 text-center lg:text-left">
                         <div className="text-4xl font-extrabold cursor-pointer" onClick={goHome}>
                             JoyfulWait
                         </div>
@@ -206,27 +206,25 @@ export default function Register() {
                             <div className="text-3xl font-semibold">
                                 No more queue line
                             </div>
-                            <div className="text-gray-200 font-extralight w-[80%]">
-                                Quickly and conveniently search and book restaurant tables online.
-                                With just one click, you can check table availability.
+                            <div className="text-gray-200 font-extralight lg:w-[80%]">
+                                Quickly and conveniently search and book restaurant tables online. With just one click, you can check table availability.
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* right */}
-
                 <div id="right" className="flex-1">
-
-                    <Card className="h-full w-full rounded-b-none p-8 overflow-auto">
-
+                    <Card className="h-full w-full rounded-lg p-8 overflow-auto shadow-lg">
                         <form onSubmit={handleRegister}>
                             <div className="mb-2">
                                 <p className="text-xs">LET'S GET YOU STARTED</p>
                             </div>
                             <div className="mb-5">
-                                <h1 className="font-bold text-2xl">Create an Account </h1>
+                                <h1 className="font-bold text-2xl">Create an Account</h1>
                             </div>
+
+                            {/* User Name */}
                             <div className="my-3">
                                 <Input
                                     type="text"
@@ -235,13 +233,15 @@ export default function Register() {
                                     onChange={handleChange}
                                     label="User Name"
                                     variant="bordered"
-                                    placeholder="name"
-                                    className="m-auto"
+                                    placeholder="Enter your name"
+                                    className="m-auto w-full"
                                 />
                                 {registerError.fieldErrors.userName && (
                                     <p className="text-red-500 text-xs">{registerError.fieldErrors.userName}</p>
                                 )}
                             </div>
+
+                            {/* Phone Number */}
                             <div className="my-3">
                                 <Input
                                     type="text"
@@ -250,15 +250,17 @@ export default function Register() {
                                     onChange={handleChange}
                                     label="Phone"
                                     variant="bordered"
-                                    placeholder="phone-number"
-                                    className="m-auto"
+                                    placeholder="Enter your Phone number"
+                                    className="m-auto w-full"
                                     inputMode="numeric"
                                     pattern="[0-9]*"
                                 />
-                                {registerError.fieldErrors.userPhone && (
+                                 {registerError.fieldErrors.userPhone && (
                                     <p className="text-red-500 text-xs">{registerError.fieldErrors.userPhone}</p>
                                 )}
                             </div>
+
+                            {/* Email */}
                             <div className="my-3">
                                 <Input
                                     type="email"
@@ -267,13 +269,16 @@ export default function Register() {
                                     onChange={handleChange}
                                     label="E-mail"
                                     variant="bordered"
-                                    placeholder="@gmail.com"
-                                    className="m-auto"
+                                    placeholder="Enter your email"
+                                    className="m-auto w-full"
+                                    
                                 />
                                 {registerError.fieldErrors.userEmail && (
                                     <p className="text-red-500 text-xs">{registerError.fieldErrors.userEmail}</p>
                                 )}
                             </div>
+
+                            {/* Password */}
                             <div className="my-3">
                                 <Input
                                     type="password"
@@ -282,8 +287,8 @@ export default function Register() {
                                     onChange={handleChange}
                                     label="Password"
                                     variant="bordered"
-                                    placeholder="password"
-                                    className="m-auto"
+                                    placeholder="Enter your password"
+                                    className="m-auto w-full"
                                 />
                                 {registerError.fieldErrors.userPass && (
                                     <p className="text-red-500 text-xs">{registerError.fieldErrors.userPass}</p>
@@ -294,10 +299,13 @@ export default function Register() {
                                     <p className="text-red-500 w-full text-sm">{registerError.generalError}</p>
                                 )}
                             </div>
+
+                            {/* Submit Button */}
                             <div className="my-3">
                                 <Button className="w-full" type="submit">GET STARTED</Button>
                             </div>
                         </form>
+
                         <div className="mt-4 text-center">
                             <p className="w-full" style={{ transition: "color 0.3s" }}>
                                 Already have an account? <span className="cursor-pointer" onClick={handleLogin} style={{ color: "#1E90FF", transition: "color 0.3s" }}
@@ -305,12 +313,11 @@ export default function Register() {
                                     onMouseLeave={(e) => e.target.style.color = "#1E90FF"}>Login</span>
                             </p>
                         </div>
-
                     </Card>
-
                 </div>
-
             </div>
         </div>
+
+
     );
 }
