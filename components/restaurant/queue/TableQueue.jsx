@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Dropdown, DropdownMenu, DropdownTrigger, DropdownItem, Pagination, Button } from "@nextui-org/react";
 import _ from 'lodash';
 
-function TebleQueue({ userID, showUsed, showStatus, models, fetchData }) {
+function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
   const itemsPerPage = 5;
   const [pageStates, setPageStates] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -285,4 +285,4 @@ function TebleQueue({ userID, showUsed, showStatus, models, fetchData }) {
   );
 }
 
-export default TebleQueue;
+export default TableQueue;
