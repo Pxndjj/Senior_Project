@@ -118,6 +118,7 @@ function Table({ modelBooking, fetchData }) {
       console.error("Error updating the queue:", error);
     } finally {
       setIsLoading(false);
+      setIsModalOpen(false);
     }
   };
 
@@ -194,8 +195,8 @@ function Table({ modelBooking, fetchData }) {
               Are you sure you want to cancel this queue?
             </p>
             <div className="flex justify-end">
-              <Button onPress={() => setIsModalOpen(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2">Cancel</Button>
-              <Button onPress={confirmUpdateStatus} className="bg-blue-500 text-white px-4 py-2 rounded-md">Confirm</Button>
+              <button onClick={() => setIsModalOpen(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2">Cancel</button>
+              <button onClick={confirmUpdateStatus} className="bg-blue-500 text-white px-4 py-2 rounded-md">Confirm</button>
             </div>
           </div>
         </div>
