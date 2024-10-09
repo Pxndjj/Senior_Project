@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 const renderStars = (rating) => {
-    const fullStars = Math.floor(rating); 
-    const hasHalfStar = rating - fullStars >= 0.3 && rating - fullStars <= 0.7; 
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); 
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating - fullStars >= 0.3 && rating - fullStars <= 0.7;
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
     return (
         <div className="flex">
@@ -19,7 +19,7 @@ const renderStars = (rating) => {
             {/* ดาวครึ่ง */}
             {hasHalfStar && (
                 <span className="text-xl mr-1 text-yellow-400">
-                    &#9734; 
+                    &#9734;
                 </span>
             )}
             {/* ดาวเปล่า */}
@@ -147,7 +147,17 @@ const RestaurantCard = ({ restaurant }) => {
                                 <span className="text-sm">{restaurant.averageRating}</span>
                                 <span className="text-sm text-gray-500 ml-2">({restaurant.reviews.length} reviews)</span>
                             </div>
-                            <p className="text-sm text-gray-500 mt-2">{restaurant.notes}</p>
+                            <p
+                                className="text-sm text-gray-500 mt-2"
+                                style={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                }}
+                            >
+                                {restaurant.notes}
+                            </p>
+
                         </div>
                     </div>
                 ))}
