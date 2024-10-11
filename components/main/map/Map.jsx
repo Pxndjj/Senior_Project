@@ -9,7 +9,7 @@ const restaurantIcon = L.icon({
   iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-red.png",
   iconSize: [32, 32],
   iconAnchor: [16, 32],
-  popupAnchor: [0, -32]
+  popupAnchor: [0, -32],
 });
 
 // Custom icon for user's current location
@@ -17,7 +17,7 @@ const userLocationIcon = L.icon({
   iconUrl: "https://leafletjs.com/examples/custom-icons/leaf-green.png",
   iconSize: [32, 32],
   iconAnchor: [16, 32],
-  popupAnchor: [0, -32]
+  popupAnchor: [0, -32],
 });
 
 // Function to calculate the distance between two points using Haversine formula
@@ -38,11 +38,20 @@ function deg2rad(deg) {
   return deg * (Math.PI / 180);
 }
 
+// Utility function to truncate text
+function truncateText(text, maxLength) {
+  if (text.length > maxLength) {
+    return text.slice(0, maxLength) + '...';
+  }
+  return text;
+}
+
 function Map({ restaurants }) {
   const [currentPosition, setCurrentPosition] = useState([18.7883, 98.9853]); // Default to Chiang Mai
   const [nearbyRestaurants, setNearbyRestaurants] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0); // For pagination
   const restaurantsPerPage = 5; // Max restaurants per page
+  const maxDescriptionLength = 50; // Maximum length for description text
   const router = useRouter();
 
   // Fetch user's current location and filter nearby restaurants
@@ -142,7 +151,9 @@ function Map({ restaurants }) {
                       className="h-48 w-full object-cover rounded-lg"
                     />
                     <h3 className="font-bold text-lg mt-2">{restaurant.name}</h3>
-                    <p className="text-gray-600 text-sm">{restaurant.address}</p>
+                    <p className="text-gray-600 text-sm">
+                      {truncateText(restaurant.address, maxDescriptionLength)}
+                    </p>
                     <p className="text-sm">
                       Distance: {getDistanceFromInKm(
                         currentPosition[0], currentPosition[1],
@@ -167,7 +178,6 @@ function Map({ restaurants }) {
           <p className='font-bold text-lg text-red-500 bg-red-100 border border-red-400 rounded-lg p-4 text-center mt-8'>
             No nearby restaurants within 10 km.
           </p>
-
         )}
       </div>
     </div>
