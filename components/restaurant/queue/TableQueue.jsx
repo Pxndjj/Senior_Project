@@ -51,13 +51,18 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
     return { date: formattedDate, time: formattedTime };
   };
 
-  const isSameDateOrBefore5AM = (currentDate, queueDate) => {
-    let current = new Date(currentDate);
-    let queue = new Date(queueDate);
-    if (current.getHours() < 5) {
-      current.setDate(current.getDate() - 1);
+  // ฟังก์ชันตรวจสอบว่าวันที่จองเลยกำหนดแล้วหรือไม่
+  const isPastDue = (queueDate) => {
+    const now = new Date();
+    const queue = new Date(queueDate);
+
+    // ถ้าคิวเป็นวันที่ก่อนหน้าวันปัจจุบัน แสดงว่า PAST DUE
+    if (queue < now) {
+      return true;
     }
-    return current.toDateString() === queue.toDateString();
+
+    // ถ้าคิวยังไม่ถึงวันปัจจุบัน แสดงว่า NOT DUE
+    return false;
   };
 
   const nextQueue = async (refID, queue_status) => {
@@ -153,17 +158,17 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
   const sortedEntries = Object.entries(groupedBy).sort(([date1], [date2]) => {
     const currentDate = new Date();
     const currentDateFormatted = currentDate.toISOString().split('T')[0];
-    
+
     const date1Formatted = new Date(date1).toISOString().split('T')[0];
     const date2Formatted = new Date(date2).toISOString().split('T')[0];
-  
+
     if (date1Formatted === currentDateFormatted) return -1;
     if (date2Formatted === currentDateFormatted) return 1;
-  
+
     if (date1Formatted > currentDateFormatted && date2Formatted > currentDateFormatted) {
       return new Date(date1) - new Date(date2);
     }
-  
+
     return new Date(date2) - new Date(date1);
   });
 
@@ -185,9 +190,7 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
           const indexOfFirstItem = indexOfLastItem - itemsPerPage;
           const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
           const totalPages = Math.ceil(data.length / itemsPerPage);
-          const currentDate = new Date();
-          const isPastDue = !isSameDateOrBefore5AM(currentDate, queueDate);
-  
+
           return (
             <div key={queueDate} className="mb-6 p-6 border border-gray-200 rounded-lg shadow-md">
               <div>
@@ -222,6 +225,15 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
                         <td>{setTimeShow(item.time_of_booking)?.date}</td>
                         <td>{setTimeShow(item.time_of_booking)?.time}</td>
                         <td>
+                          {item.queue_used === 0 ? (
+                            <span className={isPastDue(item.time_of_booking) ? "used-pastdue" : "used-notdue"}>
+                              {isPastDue(item.time_of_booking) ? "PAST DUE" : "NOT DUE"}
+                            </span>
+                          ) : (
+                            <span className="used">{queueStatus(item.queue_status)}</span>
+                          )}
+                        </td>
+                        <td>
                           <Dropdown backdrop="blur">
                             <DropdownTrigger><span className="material-symbols-outlined cursor-pointer">more_vert</span></DropdownTrigger>
                             <DropdownMenu aria-label="Static Actions">
@@ -230,19 +242,6 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
                               {item.queue_status === "S" ? ("") : (<DropdownItem className="text-gray-400" onClick={() => handleModalOpen("S", item)}>succeed</DropdownItem>)}
                             </DropdownMenu>
                           </Dropdown>
-                        </td>
-                        <td>
-                          {item.queue_used === 0 && isSameDateOrBefore5AM(new Date(), queueDate) ? (
-                            indexOfFirstItem + index === 0 ? (
-                              <Button startContent={<span className="material-symbols-outlined cursor-pointer">skip_previous</span>} className="bg-slate-300 mx-3" onClick={() => nextQueue(item.refID, item.queue_status)}>
-                                Next Queue
-                              </Button>
-                            ) : (
-                              ""
-                            )
-                          ) : (
-                            <span className={isPastDue ? "used-notdue": "used-pastdue" }>{isPastDue ? "NOT DUE" : "PAST DUE"}</span>
-                          )}
                         </td>
                       </tr>
                     ))}
@@ -257,7 +256,7 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
           );
         })
       )}
-      
+
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
@@ -286,3 +285,4 @@ function TableQueue({ userID, showUsed, showStatus, models, fetchData }) {
 }
 
 export default TableQueue;
+
