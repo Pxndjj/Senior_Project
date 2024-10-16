@@ -145,7 +145,7 @@ export default function Login() {
                                 <p className="text-xs">LET'S GET YOU STARTED <span className="text-green-500 text-sm">{messagelogin}</span></p>
                             </div>
                             <div className="mb-5">
-                                <h1 className="font-bold text-2xl">Create an Account</h1>
+                                <h1 className="font-bold text-2xl">Login to your account</h1>
                             </div>
 
                             {actionLogin === "phone" ? (
